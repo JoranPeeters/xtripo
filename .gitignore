@@ -1,0 +1,12 @@
+.project
+.settings
+.idea
+.vscode
+atlassian-ide-plugin.xml
+.vagrant
+.DS_Store
+*.sql
+*.sql.gz
+*.sql.zip
+*.7z
+.php-cs-fixer.cache
