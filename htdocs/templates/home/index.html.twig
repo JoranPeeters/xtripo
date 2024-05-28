@@ -1,6 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}{{ 'app.slug'|trans }}{% endblock %}
 
+    {% block main %}
 
+    <h1>This is an H1 heading</h1>
+    <h2>This is an H2 heading</h2>
+    <h3>This is an H3 heading</h3>
+    <h4>This is an H4 heading</h4>
+    <p>This is a paragraph of text.</p>
+    <small>This is a small text.</small>
+    <strong>This is strong text.</strong>
 
+        <div class="flex flex-wrap justify-center space-x-4 gap-40 mt-8">
+            <div class="grid grid-cols-2 gap-4">
+                <button class="btn btn-green">Green Primary</button>
+                <button class="btn-secondary btn-green">Green Secondary</button>
+                <button class="btn btn-green-outlined">Green Outlined</button>
+                <button class="btn-secondary btn-green-outlined">Green Outlined</button>
+                <button class="btn btn-green-text">Green Text</button>
+                <button class="btn-secondary btn-green-text">Green Text</button>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <button class="btn btn-orange">Orange Primary</button>
+                <button class="btn-secondary btn-orange">Orange Secondary</button>
+                <button class="btn btn-orange-outlined">Orange Outlined</button>
+                <button class="btn-secondary btn-orange-outlined">Orange Outlined</button>
+                <button class="btn btn-orange-text">Orange Text</button>
+                <button class="btn-secondary btn-orange-text">Orange Text</button>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <button class="btn btn-neutral">Neutral Primary</button>
+                <button class="btn-secondary btn-neutral">Neutral Secondary</button>
+                <button class="btn btn-neutral-outlined">Neutral Outlined</button>
+                <button class="btn-secondary btn-neutral-outlined">Neutral Outlined</button>
+                <button class="btn btn-neutral-text">Neutral Text</button>
+                <button class="btn-secondary btn-neutral-text">Neutral Text</button>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <button class="btn btn-white-outlined">Neutral Outlined</button>
+                <button class="btn-secondary btn-white-outlined">Neutral Outlined</button>
+                <button class="btn btn-white-text">Neutral Text</button>
+                <button class="btn-secondary btn-white-text">Neutral Text</button>
+            </div>
+        </div>
+    {% endblock %}

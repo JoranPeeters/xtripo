@@ -1,0 +1,58 @@
+# General application messages
+app:
+  title: "My Symfony Application"
+  description: "This is a sample application using Symfony"
+  slug: "xtripo |"
+  logo: "xtripo"
+
+navigation:
+  home: "Home"
+  about: "About"
+  plan: "Plan"
+  discover: "Discover"
+  contact: "Contact"
+  login: "Login"
+  logout: "Logout"
+  register: "Sign Up"
+
+# User-related messages
+user:
+  profile:
+    title: "User Profile"
+    edit: "Edit Profile"
+    view: "View Profile"
+    settings: "User Settings"
+  registration:
+    title: "User Registration"
+    submit: "Register"
+    success: "Registration successful!"
+    failure: "Registration failed."
+
+# Form labels and validation messages
+form:
+  labels:
+    username: "Username"
+    password: "Password"
+    email: "Email"
+  validation:
+    required: "This field is required."
+    email: "Please enter a valid email address."
+    min_length: "This field must be at least {min} characters long."
+
+# Button texts
+buttons:
+  submit: "Submit"
+  cancel: "Cancel"
+  delete: "Delete"
+
+# Miscellaneous messages
+misc:
+  yes: "Yes"
+  no: "No"
+  ok: "OK"
+  confirm: "Are you sure?"
+
+# Footer
+footer:
+  subscribe: "Subscribe to our newsletter"
+  button: "Subscribe"

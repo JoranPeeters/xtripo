@@ -1,0 +1,55 @@
+.btn-secondary {
+    @apply px-4 py-2 rounded-full font-poppins font-semibold text-lg duration-300;
+}
+
+.btn {
+    @apply px-4 py-2 rounded-lg font-poppins font-semibold text-lg duration-300;
+}
+
+/* colors */
+.btn-green {
+    @apply bg-green text-neutral hover:bg-dark-green;
+}
+
+.btn-orange {
+    @apply bg-orange text-neutral hover:bg-dark-orange;
+}
+
+.btn-neutral {
+    @apply bg-invert text-invert hover:bg-grey;
+}
+
+
+/* Outlined Buttons */
+.btn-green-outlined {
+    @apply bg-transparent border border-green text-green hover:bg-green hover:text-neutral;
+}
+
+.btn-orange-outlined {
+    @apply bg-transparent border border-orange text-orange hover:bg-orange hover:text-neutral;
+}
+
+.btn-neutral-outlined {
+    @apply bg-transparent border border-invert text-primary hover:bg-invert hover:text-invert;
+}
+
+.btn-white-outlined {
+    @apply bg-transparent border border-white text-neutral hover:bg-white hover:text-black-neutral;
+}
+
+/* Text Buttons */
+.btn-green-text {
+    @apply bg-transparent text-light-green hover:text-invert hover:bg-light-green;
+}
+
+.btn-orange-text {
+    @apply bg-transparent text-light-orange hover:text-invert hover:bg-light-orange;
+}
+
+.btn-neutral-text {
+    @apply bg-transparent text-primary hover:text-invert hover:bg-invert;
+}
+
+.btn-white-text {
+    @apply bg-transparent text-neutral hover:bg-white hover:text-black-neutral;
+}

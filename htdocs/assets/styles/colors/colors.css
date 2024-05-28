@@ -1,0 +1,114 @@
+:root {
+    /* Transparent Colors */
+    --color-transparent: transparent;
+
+    /* Gray Colors */
+    --color-grey-0: #FFFFFF;
+    --color-grey-50: #E6E6E6;
+    --color-grey-200: #B3B3B3;
+    --color-grey-400: #808080;
+    --color-grey-600: #4D4D4D;
+    --color-grey-800: #1A1A1A;
+    --color-grey-900: #12100E;
+
+    /* Brand Colors */
+    --color-brand-light-green: #3D993D;
+    --color-brand-green: #007300;
+    --color-brand-dark-green: #004D00;
+    --color-brand-light-orange: #F08B60;
+    --color-brand-orange: #F06225;
+    --color-brand-dark-orange: #CC531F;
+
+    /* Mode Colors */
+    --color-mode-light: #F7F7F7;
+    --color-mode-dark: #121212;
+
+    /* State Colors */
+    --color-state-success: #009900;
+    --color-state-error: #F63E02;
+
+    /* Default Text Colors */
+    --text-primary: var(--color-grey-900);
+    --text-secondary: var(--color-grey-600);
+    --text-neutral: var(--color-grey-0);
+    --text-invert: var(--color-grey-0);
+    --text-black-neutral: var(--color-grey-800);
+    --text-grey-neutral: var(--color-grey-600);
+    --text-green: var(--color-brand-green);
+    --text-dark-green: var(--color-brand-dark-green);
+    --text-light-green: var(--color-brand-light-green);
+    --text-orange: var(--color-brand-orange);
+    --text-dark-orange: var(--color-brand-dark-orange);
+    --text-light-orange: var(--color-brand-light-orange);
+    --text-grey: var(--color-grey-200);
+    --text-transparent: var(--color-transparent);
+
+    /* Default Surface Colors */
+    --surface-primary: var(--color-mode-light);
+    --surface-secondary: var(--color-grey-200);
+    --surface-invert: var(--color-mode-dark);
+    --surface-green: var(--color-brand-green);
+    --surface-dark-green: var(--color-brand-dark-green);
+    --surface-light-green: var(--color-brand-light-green);
+    --surface-orange: var(--color-brand-orange);
+    --surface-dark-orange: var(--color-brand-dark-orange);
+    --surface-light-orange: var(--color-brand-light-orange);
+    --surface-neutral-white: var(--color-grey-0);
+    --surface-transparent: var(--color-transparent);
+
+    /* Default Border Colors */
+    --border-primary: var(--color-grey-900);
+    --border-orange: var(--color-brand-orange);
+    --border-dark-orange: var(--color-brand-dark-orange);
+    --border-light-orange: var(--color-brand-light-orange);
+    --border-green: var(--color-brand-green);
+    --border-dark-green: var(--color-brand-dark-green);
+    --border-light-green: var(--color-brand-light-green);
+    --border-neutral: var(--color-mode-light);
+    --border-white: var(--color-grey-0);
+    --border-transparent: var(--color-transparent);
+    --border-invert: var(--color-mode-dark);
+}
+
+.dark {
+    /* Dark Text Colors */
+    --text-primary: var(--color-grey-50);
+    --text-secondary: var(--color-grey-200);
+    --text-neutral: var(--color-grey-0);
+    --text-invert: var(--color-grey-900);
+    --text-black-neutral: var(--color-grey-800);
+    --text-grey-neutral: var(--color-grey-600);
+    --text-green: var(--color-brand-green);
+    --text-dark-green: var(--color-brand-dark-green);
+    --text-light-green: var(--color-brand-light-green);
+    --text-orange: var(--color-brand-orange);
+    --text-dark-orange: var(--color-brand-dark-orange);
+    --text-light-orange: var(--color-brand-light-orange);
+    --text-grey: var(--color-grey-200);
+    --text-transparent: var(--color-transparent);
+
+    /* Dark Surface Colors */
+    --surface-primary: var(--color-mode-dark);
+    --surface-secondary: var(--color-grey-400);
+    --surface-invert: var(--color-mode-light);
+    --surface-green: var(--color-brand-green);
+    --surface-dark-green: var(--color-brand-dark-green);
+    --surface-light-green: var(--color-brand-light-green);
+    --surface-orange: var(--color-brand-orange);
+    --surface-dark-orange: var(--color-brand-dark-orange);
+    --surface-light-orange: var(--color-brand-light-orange);
+    --surface-neutral-white: var(--color-grey-0);
+    --surface-transparent: var(--color-transparent);
+
+    /* Dark Border Colors */
+    --border-primary: var(--color-grey-50);
+    --border-orange: var(--color-brand-orange);
+    --border-dark-orange: var(--color-brand-dark-orange);
+    --border-light-orange: var(--color-brand-light-orange);
+    --border-green: var(--color-brand-green);
+    --border-dark-green: var(--color-brand-dark-green);
+    --border-neutral: var(--color-grey-50);
+    --border-white: var(--color-grey-0);
+    --border-transparent: var(--color-transparent);
+    --border-invert: var(--color-mode-light);
+}
