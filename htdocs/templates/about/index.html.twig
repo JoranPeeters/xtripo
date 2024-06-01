@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'about.page_title'|trans|raw }}{% endblock %}
+
+{% block body %}
+
+        <!-- Hero Block -->
+        <div class="relative w-full rounded-20 overflow-hidden -mt-10">
+            <img src="{{ asset('build/images/about-hero.png')}}" alt="" class="object-cover w-full min-h-[30rem] lg:max-h-[40rem] rounded-20 transition-transform duration-1000 hover:scale-105">      
+                <div class="flex flex-col absolute inset-0 md:ml-20 md:w-3/5 px-4 lg:px-0 xl:px-0 xl:w-1/2 2xl:px-0 lg:w-3/5 lg:ml-20xl 2xl:max-w-[40%] justify-center text-neutral gap-8 z-[1] pointer-events-auto">
+                    <h1>{{ 'about.hero.title'|trans }}</h1> 
+                    <strong>{{ 'about.hero.description'|trans }}</strong>      
+                </div> 
+        </div>
+
+        <!-- Feature One Block-->
+        <div class="w-full flex flex-col md:flex-row mt-20 xl:mt-36 gap-8">
+            <div class="flex flex-col w-full md:w-1/2 justify-center text-primary gap-8 xl:gap-12 xl:-mt-16 2xl:pr-52">
+                <h2>{{ 'about.feature.one.title'|trans }}</h2>
+                <!-- Image, hidden from tablet -->
+                <div class="flex items-center max-h-40 md:max-h-full md:hidden overflow-hidden md:mt-20 rounded-8">
+                    <img src="{{ asset('build/images/map.png')}}" alt="" class="object-cover h-full md:h-auto w-full">
+                </div>
+                <p class="2xl:pr-44">{{ 'about.feature.one.description'|trans }}</p>
+                <div class="flex flex-row gap-6">
+                    <button type="" class="btn btn-neutral-outlined">{{ 'about.feature.one.secondary_button'|trans }}</button>
+                    <button type="" class="btn btn-green">{{ 'about.feature.one.primary_button'|trans }}</button>
+                </div>
+            </div>
+            <div class="flex flex-row w-full md:w-1/2 justify-between py-4">
+
+                <!-- First image, hidden on mobile -->
+                <div class="hidden md:flex mx-2 max-h-40 md:max-h-full md:h-auto overflow-hidden md:mt-20 rounded-8">
+                    <img src="{{ asset('build/images/van.png')}}" alt="" class="object-cover object-right h-full md:h-auto w-full rounded-8 transition-transform duration-1000 hover:scale-110">
+                </div>
+
+                <!-- First image, hidden on mobile -->
+                <div class="hidden md:flex mx-2 md:h-auto overflow-hidden mb-20 rounded-8">
+                    <img src="{{ asset('build/images/map.png')}}" alt="" class="object-cover h-full md:h-auto w-full rounded-8 transition-transform duration-1000 hover:scale-110">
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Feature Two Block-->
+        <div class="w-full flex flex-col md:flex-row-reverse mt-20 xl:mt-36 border border-orange rounded-20 gap-16 xl:gap-64 p-6 lg:px-32">
+            <div class="flex flex-col w-full md:w-1/2 justify-start text-primary gap-8 xl:gap-12 xl:pt-10">
+                <h2>{{ 'about.feature.two.title'|trans }}</h2>
+                <p class="2xl:pr-44">{{ 'about.feature.two.description'|trans }}</p>
+            </div>
+            <div class="flex flex-row w-full md:w-1/2 py-4">
+
+                <!-- First image, hidden on mobile -->
+                <div class="hidden md:flex mx-2 max-h-20 md:max-h-full md:h-auto overflow-hidden rounded-8">
+                    <img src="{{ asset('build/images/van.png')}}" alt="" class="object-cover object-right h-full md:h-auto w-full rounded-8 transition-transform duration-1000 hover:scale-110">
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Feature Three Block-->
+            <div class="flex flex-col md:flex-row w-full mt-20 xl:mt-36 justify-between text-primary gap-8 xl:gap-12">
+                <h2 class="w-full md:w-1/2">{{ 'about.feature.three.title'|trans }}</h2>
+                <div class="flex flex-col gap-8 w-full md:w-1/2 items-start">
+                    <p class="2xl:pr-44">{{ 'about.feature.three.description'|trans }}</p>
+                    <button type="" class="btn btn-orange">{{ 'about.feature.three.primary_button'|trans }}</button>
+                </div>
+            </div>
+
+            <div class=" hidden md:flex flex-row w-full md:w-full mt-20 xl:mt-36 gap-9">
+
+                <!-- First image, hidden on mobile -->
+                <div class="hidden md:flex mx-2 max-h-20 md:max-h-full md:h-auto overflow-hidden rounded-8">
+                    <img src="{{ asset('build/images/poolhouse.png')}}" alt="" class="object-cover object-center h-full md:h-auto w-full rounded-8 transition-transform duration-1000 hover:scale-110">
+                </div>
+
+                <!-- Second image, hidden on mobile -->
+                <div class="hidden md:flex mx-2 max-h-20 md:max-h-full md:h-auto overflow-hidden rounded-8">
+                    <img src="{{ asset('build/images/cabin.png')}}" alt="" class="object-cover object-center h-full md:h-auto w-full rounded-8 transition-transform duration-1000 hover:scale-110">
+                </div>
+
+                <!-- Third image, hidden on mobile -->
+                <div class="hidden md:flex mx-2 max-h-20 md:max-h-full md:h-auto overflow-hidden rounded-8">
+                    <img src="{{ asset('build/images/mountain-trail.png')}}" alt="" class="object-cover object-center h-full md:h-auto w-full rounded-8 transition-transform duration-1000 hover:scale-110">
+                </div>
+                
+            </div>
+{% endblock %}

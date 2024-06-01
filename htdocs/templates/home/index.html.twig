@@ -1,47 +1,170 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'app.slug'|trans }}{% endblock %}
+{% block title %}{{ 'home.page_title'|trans|raw }}{% endblock %}
 
-    {% block main %}
+    {% block body %}
 
-    <h1>This is an H1 heading</h1>
-    <h2>This is an H2 heading</h2>
-    <h3>This is an H3 heading</h3>
-    <h4>This is an H4 heading</h4>
-    <p>This is a paragraph of text.</p>
-    <small>This is a small text.</small>
-    <strong>This is strong text.</strong>
+        <!-- Hero Block -->
+        <div class="relative w-full rounded-20 overflow-hidden -mt-10">
+            <img src="{{ asset('build/images/hero-image.png')}}" alt="" class="object-cover w-full min-h-[30rem] lg:max-h-[40rem] rounded-20 transition-transform duration-1000 hover:scale-105">      
+                <div class="flex flex-col absolute inset-0 md:ml-20 md:w-3/5 px-4 lg:px-0 xl:px-0 xl:w-1/2 2xl:px-0 lg:w-3/5 lg:ml-20xl 2xl:w-[40rem] justify-center text-neutral gap-8 z-[1] pointer-events-auto">
+                    <h1>{{ 'home.hero.title'|trans }}</h1> 
+                    <strong>{{ 'home.hero.description'|trans }}</strong>
+                    <div class="flex flex-row gap-6">
+                        <button type="" class="btn btn-white-outlined">{{ 'home.hero.secondary_button'|trans }}</button>
+                        <button type="" class="btn btn-green">{{ 'home.hero.primary_button'|trans }}</button>
+                    </div>       
+                </div> 
+        </div>
 
-        <div class="flex flex-wrap justify-center space-x-4 gap-40 mt-8">
-            <div class="grid grid-cols-2 gap-4">
-                <button class="btn btn-green">Green Primary</button>
-                <button class="btn-secondary btn-green">Green Secondary</button>
-                <button class="btn btn-green-outlined">Green Outlined</button>
-                <button class="btn-secondary btn-green-outlined">Green Outlined</button>
-                <button class="btn btn-green-text">Green Text</button>
-                <button class="btn-secondary btn-green-text">Green Text</button>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <button class="btn btn-orange">Orange Primary</button>
-                <button class="btn-secondary btn-orange">Orange Secondary</button>
-                <button class="btn btn-orange-outlined">Orange Outlined</button>
-                <button class="btn-secondary btn-orange-outlined">Orange Outlined</button>
-                <button class="btn btn-orange-text">Orange Text</button>
-                <button class="btn-secondary btn-orange-text">Orange Text</button>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <button class="btn btn-neutral">Neutral Primary</button>
-                <button class="btn-secondary btn-neutral">Neutral Secondary</button>
-                <button class="btn btn-neutral-outlined">Neutral Outlined</button>
-                <button class="btn-secondary btn-neutral-outlined">Neutral Outlined</button>
-                <button class="btn btn-neutral-text">Neutral Text</button>
-                <button class="btn-secondary btn-neutral-text">Neutral Text</button>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <button class="btn btn-white-outlined">Neutral Outlined</button>
-                <button class="btn-secondary btn-white-outlined">Neutral Outlined</button>
-                <button class="btn btn-white-text">Neutral Text</button>
-                <button class="btn-secondary btn-white-text">Neutral Text</button>
+        <!-- Search Block -->
+        <div class="flex relative justify-center content-center items-center text-primary bg-[rgba(229,231,235,0.98)] dark:bg-[rgba(18,18,18,0.9)] rounded-20 shadow-xl w-full md:w-auto mt-8 lg:-mt-32 z-10">
+            <div class="flex flex-col items-start px-6 py-4 lg:px-8 lg:py-6 gap-2 md:gap-4">
+                <h3 class="mb-5 text-2xl">{{ 'home.search.title'|trans }}</h3>
+                <div class="flex items-end flex-col md:flex-row content-end flex-wrap justify-between md:justify-center gap-8 2xl:gap-16 pb-6">
+                    <div class="flex items-center gap-2 rounded-8">
+                        <div class="flex flex-col gap-2">
+                            <div class="flex flex-row items-center gap-2">
+                                <i class="fa-solid fa-location-dot fa-lg"></i>
+                                <span class="font-semibold text-lg">{{ 'home.search.location.label'|trans }}</span>
+                            </div>
+                            <div class="relative">
+                                <select class="appearance-none px-4 py-2 rounded-full bg-primary border focus:outline-none pr-10">
+                                    <option value="all_destinations" disabled selected>{{ 'home.search.location.placeholder'|trans }}</option>
+                                    <option value="destination1">Destination 1</option>
+                                    <option value="destination2">Destination 2</option>
+                                    <option value="destination3">Destination 3</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-primary">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 rounded-8">
+                        <div class="flex flex-col gap-2">
+                            <div class="flex flex-row items-center gap-2">
+                                <i class="fa-solid fa-user-group fa-lg"></i>
+                                <span class="font-semibold text-lg">{{ 'home.search.travelers.label'|trans }}</span>
+                            </div>
+                            <input type="number" class="px-4 py-2 rounded-full bg-transparent border border-primary focus:outline-none" placeholder="{{ 'home.search.travelers.placeholder'|trans }}" min="1">
+                        </div>
+                    </div>
+                    <div class="flex items-center self-start gap-2 rounded-8">
+                        <div class="flex flex-col gap-2">
+                            <div class="flex flex-row items-center gap-2">
+                                <i class="fa-solid fa-calendar fa-lg"></i>
+                                <span class="font-semibold text-lg">{{ 'home.search.checkin.label'|trans }}</span>
+                            </div>
+                            <input type="date" class="px-4 py-2 rounded-full bg-transparent border border-primary focus:outline-none">
+                        </div>
+                    </div>
+                    <div class="flex items-center self-start gap-2 rounded-8">
+                        <div class="flex flex-col gap-2">
+                            <div class="flex flex-row items-center gap-2">
+                                <i class="fa-solid fa-calendar fa-lg"></i>
+                                <span class="font-semibold text-lg">{{ 'home.search.checkout.label'|trans }}</span>
+                            </div>
+                            <input type="date" class="px-4 py-2 rounded-full bg-transparent border border-primary focus:outline-none">
+                        </div>
+                    </div>
+                    <button class="flex items-center justify-center gap-2 btn-secondary btn-green w-full md:w-auto">
+                        {{ 'home.search.button'|trans }}
+                        <i class="fa-solid fa-search text-white"></i>
+                    </button>
+                </div>
             </div>
         </div>
+
+
+        <!-- Info Block-->   
+        <div class="w-full flex flex-col md:flex-row mt-20 xl:mt-36 gap-8 md:gap-16">
+            <div class="flex flex-col w-full md:w-1/2 justify-center text-primary gap-8 xl:gap-16 xl:-mt-16">
+                <h2>{{ 'home.info.title'|trans }}</h2>
+                <!-- Image, hidden from tablet -->
+                <div class="flex items-center max-h-40 md:max-h-full md:hidden overflow-hidden md:mt-20 rounded-8">
+                    <img src="{{ asset('build/images/mountains.png')}}" alt="" class="object-cover h-full md:h-auto w-full">
+                </div>
+                <p class="2xl:pr-44">{{ 'home.info.description'|trans }}</p>
+                <div class="flex flex-row gap-6">
+                    <button type="" class="btn btn-neutral-outlined">{{ 'home.info.secondary_button'|trans }}</button>
+                    <button type="" class="btn btn-green">{{ 'home.info.primary_button'|trans }}</button>
+                </div>
+            </div>
+            <div class="flex flex-row w-full md:w-1/2 justify-between py-4">
+                <!-- First image, hidden on mobile -->
+                <div class="hidden md:flex mx-2 md:h-auto overflow-hidden mb-20 rounded-8">
+                    <img src="{{ asset('build/images/waves.png')}}" alt="" class="object-cover h-full md:h-auto w-full rounded-8 transition-transform duration-1000 hover:scale-110">
+                </div>
+
+                <!-- Middle image, hidden on mobile -->
+                <div class="hidden md:flex mx-2 max-h-40 md:max-h-full md:h-auto overflow-hidden md:mt-20 rounded-8">
+                    <img src="{{ asset('build/images/mountains.png')}}" alt="" class="object-cover h-full md:h-auto w-full rounded-8 transition-transform duration-1000 hover:scale-110">
+                </div>
+
+                <!-- Third image, hidden on mobile -->
+                <div class="hidden md:flex mx-2 md:h-auto overflow-hidden mb-20 rounded-8">
+                    <img src="{{ asset('build/images/camping.png')}}" alt="" class="object-cover h-full md:h-auto w-full rounded-8 transition-transform duration-1000 hover:scale-110">
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Popular Block--> 
+        <div class="w-full flex flex-col mt-20 xl:mt-36 gap-8 md:gap-16">
+
+            <div class="text-primary">
+                <h2>{{ 'home.popular.title'|trans }}<h2>
+                <p>{{ 'home.popular.description'|trans }}</p>
+            </div>
+
+            <!-- Card Component -->
+            <a href="#" class="block relative max-w-md rounded-20 overflow-hidden shadow-lg transition-transform duration-500 group cursor-pointer">
+                
+                <div class="relative overflow-hidden rounded-20 h-[20rem]">
+                    <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="{{ asset('build/images/explore-trips-hero.jpg')}}" alt="Road Trip Image">
+                    <!-- Gradient Overlay -->
+                    <div class="overlay absolute inset-0 transition-opacity duration-500"></div>
+                </div>
+
+                <div class="absolute inset-0 flex flex-col justify-end p-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="font-metropolis text-neutral text-2xl mb-2">Land</h2>
+                            <p class="font-poppins text-neutral mb-4">Stad</p>     
+                        </div>
+                        <div class="flex items-center gap-1 text-neutral border border-dark-orange px-2 py-1 rounded-full">
+                            <i class="fa-solid fa-star"></i>
+                            <p>4.2</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <button class="btn btn-white-text flex gap-2 items-center group">
+                            {{ 'home.popular.card_button'|trans }}
+                            <i class="fa-solid fa-arrow-right ml-2 transform transition-transform duration-300 group-hover:translate-x-2"></i>
+                        </button>
+                        <span class="text-neutral font-semibold">vanaf €185</span>
+                    </div>
+                </div>
+            </a>
+
+           <button class="flex gap-2 btn btn-orange content-start self-start items-center">
+                {{ 'home.popular.primary_button'|trans }}
+                <i class="fa-solid fa-eye fa-lg"></i>
+            </button>
+
+
+        <!-- Destinations Block-->
+        <div class="relative w-full rounded-20 mt-20 xl:mt-36 overflow-hidden">
+            <img src="{{ asset('build/images/destinations.png')}}" alt="" class="object-cover object-bottom w-full align-bottom sel f-start h-auto min-h-[30rem] lg:max-h-[40rem] rounded-20 transition-transform duration-1000 hover:scale-105">      
+                <div class="flex flex-col absolute inset-0 md:ml-20 md:w-3/5 px-4 lg:px-0 xl:px-0 xl:w-1/2 2xl:px-0 lg:w-3/5 lg:ml-20xl justify-center text-neutral gap-8 z-[1] pointer-events-auto">
+                    <h1>{{ 'home.destinations.title'|trans }}</h1> 
+                    <strong>{{ 'home.destinations.description'|trans }}</strong>
+                    <div class="flex flex-row gap-6">
+                        <button type="" class="btn btn-white items-center flex gap-2">{{ 'home.destinations.primary_button'|trans }}<i class="fa-solid fa-compass fa-lg"></i></button>
+                    </div>       
+                </div> 
+        </div>
+
     {% endblock %}

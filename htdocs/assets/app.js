@@ -7,5 +7,5 @@
 import './styles/app.css';
 import './js/mode/themeSwitcher.js';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+console.log('app.js loaded! 🎉');
 

@@ -5,6 +5,7 @@
     /* Gray Colors */
     --color-grey-0: #FFFFFF;
     --color-grey-50: #E6E6E6;
+    --color-grey-100: #CDCDCD;
     --color-grey-200: #B3B3B3;
     --color-grey-400: #808080;
     --color-grey-600: #4D4D4D;
@@ -54,6 +55,8 @@
     --surface-dark-orange: var(--color-brand-dark-orange);
     --surface-light-orange: var(--color-brand-light-orange);
     --surface-neutral-white: var(--color-grey-0);
+    --surface-grey: var(--color-grey-200);
+    --surface-light-grey: var(--color-grey-100);
     --surface-transparent: var(--color-transparent);
 
     /* Default Border Colors */
@@ -98,6 +101,8 @@
     --surface-dark-orange: var(--color-brand-dark-orange);
     --surface-light-orange: var(--color-brand-light-orange);
     --surface-neutral-white: var(--color-grey-0);
+    --surface-grey: var(--color-grey-200);
+    --surface-light-grey: var(--color-grey-100);
     --surface-transparent: var(--color-transparent);
 
     /* Dark Border Colors */

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html class="overflow-x-hidden">
 
   <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <title>{% block title %}{% endblock %} | {{ 'app.suffix'|trans|raw }}</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
     <script src="https://kit.fontawesome.com/93e054a147.js" crossorigin="anonymous"></script>
     {% block stylesheets %}
@@ -11,28 +11,25 @@
     {% endblock %}
   </head>
 
-  <body class="font-poppins flex flex-col justify-center items-center bg-primary text-primary">
+  <body class="font-poppins flex flex-col min-h-screen mx-auto justify-center items-center content-center bg-primary text-primary w-11/12 2xl:w-4/5">
 
     {% block nav %}
-    <nav class="w-11/12 lg:w-3/4 flex flex-row items-center justify-between flex-wrap bg-primary rounded-full px-9 py-4 mt-8 border border-neutral shadow-lg">
+    <nav class="w-full flex flex-row z-10 items-center justify-between flex-wrap bg-primary rounded-full px-9 py-4 mt-8 border border-neutral shadow-lg">
 
+      <!-- Logo -->
       <div class="text-primary">
-        <span class="font-semibold text-4xl tracking-tight self-start flex-grow cursor-pointer">{{ 'app.logo'|trans }}</span>
+          <a href="{{ path('app_home') }}" class="font-semibold text-4xl tracking-tight self-start flex-grow cursor-pointer transform transition-all duration-200 ease-in-out hover:tracking-widest">{{ 'app.logo'|trans }}</a>
       </div>
+
       
       <div class="flex flex-row">
-        <div class="block lg:hidden">
-          <button class="flex items-center px-3 py-2 border rounded text-secondary border-secondary hover:text-neutral hover:border-neutral">
-            <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
-          </button>
-        </div>
+        <div class="lg:flex md:items-center md:w-auto md:gap-3 lg:gap-8 hidden">
 
-        <div class="lg:flex lg:items-center lg:w-auto lg:gap-8 hidden">
-
-          <div class="text-base lg:flex-grow">
-            <a href="#responsive-header" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4">{{ 'navigation.discover'|trans }}</a>
-            <a href="#responsive-header" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4">{{ 'navigation.plan'|trans }}</a>
-            <a href="#responsive-header" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline">{{ 'navigation.about'|trans }}</a>
+          <div class="text-base md:flex-grow flex gap-5 lg:gap-6">
+            <a href="{{ path('app_explore_trips') }}" class="block btn-secondary btn-neutral-text md:inline-block lg:mt-0 text-primary">{{ 'navigation.explore_trips'|trans }}</a>
+            <a href="#responsive-header" class="block btn-secondary btn-neutral-text md:inline-block lg:mt-0 text-primary">{{ 'navigation.trip_planner'|trans }}</a>
+            <a href="{{ path('app_about') }}" class="block btn-secondary btn-neutral-text md:inline-block lg:mt-0 text-primary">{{ 'navigation.about'|trans }}</a>
+            <a class="px-4 py-2">{{ 'navigation.divider'|trans }}</a>
           </div>
 
           <div class="flex">
@@ -42,26 +39,30 @@
 
         </div>
 
-        <div>
-            <button class="moon cursor-pointer px-4 mx-2 py-2 border border-primary rounded-full text-primary self-end hover:text-invert hover:bg-invert duration-500"><i class="fa-solid fa-moon"></i></button>
-            <button class="sun cursor-pointer px-4 mx-2 py-2 border border-primary rounded-full text-primary self-end hover:text-invert hover:bg-invert duration-500"><i class="fa-solid fa-sun"></i></button>
+        <div class="flex">
+            <button class="moon cursor-pointer px-4 mx-2 py-2 border border-primary rounded-full text-primary self-center items-end hover:text-invert hover:bg-invert duration-500"><i class="fa-solid fa-moon"></i></button>
+            <button class="sun cursor-pointer px-4 mx-2 py-2 border border-primary rounded-full text-primary self-center items-end hover:text-invert hover:bg-invert duration-500"><i class="fa-solid fa-sun"></i></button>
+        </div>
+
+        <div class="block lg:hidden">
+          <button class="btn btn-neutral-text"><i class="fa-solid fa-bars fa-xl"></i></button>
         </div>
 
       </div>
     </nav>
     {% endblock %}
 
-    {% block main %}{% endblock %}
+    {% block body %}{% endblock %}
 
     {% block footer %}
 
-      <footer class="w-11/12 lg:w-3/4 flex flex-col lg:flex-row  gap-20 items-top justify-between pt-10 pb-24 px-16 mt-8 border border-neutral shadow-lg rounded-t-3xl">
+      <footer class="w-full flex flex-col lg:flex-row gap-20 items-top justify-between pt-10 pb-24 px-16 mt-20 xl:mt-36 border border-neutral shadow-lg rounded-t-20">
 
         <div class="flex flex-col justify-items-start gap-4">
           <span class="font-semibold text-4xl tracking-tight self-start flex-grow">{{ 'app.logo'|trans }}</span>
           <div class="text-base lg:flex-grow">
-            <a href="#responsive-header" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.discover'|trans }}</a>
-            <a href="#responsive-header" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.plan'|trans }}</a>
+            <a href="#responsive-header" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.explore_trips'|trans }}</a>
+            <a href="#responsive-header" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.trip_planner'|trans }}</a>
             <a href="#responsive-header" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mt-3">{{ 'navigation.about'|trans }}</a>
           </div>
         </div>
@@ -69,7 +70,7 @@
         <div class="flex flex-col gap-4">
           <h4>{{ 'footer.subscribe'|trans }}</h4>
             <div class="flex flex-col lg:flex-row gap-6">
-              <input class="shadow-md rounded-lg w-80 py-2 px-3 text-lg" placeholder="Email" type="" name="" value="">
+              <input class="shadow-md rounded-8 w-80 py-2 px-3 text-lg" placeholder="Email" type="" name="" value="">
               <button class="btn btn-orange flex self-start items-center lg:ml-2 gap-2">{{ 'footer.button'|trans }}<i class="fa-solid fa-circle-arrow-right fa-lg"></i></button>
             </div>
         </div>

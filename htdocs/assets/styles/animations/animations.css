@@ -1,2 +1,8 @@
-
+.overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+    opacity: 0;
+}
+.group:hover .overlay {
+    opacity: 1;
+}
   

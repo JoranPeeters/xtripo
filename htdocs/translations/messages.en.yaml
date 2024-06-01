@@ -1,15 +1,16 @@
 # General application messages
 app:
-  title: "My Symfony Application"
-  description: "This is a sample application using Symfony"
-  slug: "xtripo |"
+  title: "xtripo"
+  description: "Bachelor project Joran Peeters KDG"
+  suffix: "xtripo"
   logo: "xtripo"
 
 navigation:
   home: "Home"
+  divider: "|"
   about: "About"
-  plan: "Plan"
-  discover: "Discover"
+  trip_planner: "Planner"
+  explore_trips: "Explore Trips"
   contact: "Contact"
   login: "Login"
   logout: "Logout"
@@ -18,12 +19,12 @@ navigation:
 # User-related messages
 user:
   profile:
-    title: "User Profile"
+    title: "User profile"
     edit: "Edit Profile"
     view: "View Profile"
     settings: "User Settings"
   registration:
-    title: "User Registration"
+    title: "User registration"
     submit: "Register"
     success: "Registration successful!"
     failure: "Registration failed."
@@ -56,3 +57,135 @@ misc:
 footer:
   subscribe: "Subscribe to our newsletter"
   button: "Subscribe"
+
+home:
+  page_title: "home"
+  hero:
+    title: "Plan your adventure road trip today"
+    description: "Discover new destinations, create unforgettable memories, 
+    and experience the thrill of the open road with Xtripo."
+    primary_button: "Explore!"
+    secondary_button: "More Info"
+  
+  search:
+    title: "Find your next adventure"
+    location: 
+      label: "Location"
+      placeholder: "Where are you going?"
+    checkin: 
+      label: "Check in"
+      placeholder: "Add date"
+    checkout: 
+      label: "Check out"
+      placeholder: "Add date"
+    travelers: 
+      label: "Travelers"
+      placeholder: "Add guests"
+    button: "Search"
+
+  info:
+    title: "What will be your next adventure?"
+    description: "Are you ready for the road trip of a lifetime? 
+    Sign up for Xtripo today and start planning your ultimate adventure. 
+    With our intuitive interface and powerful features, you can easily create the perfect route, 
+    discover attractions, and book accommodations. Don't miss out on the opportunity to explore new 
+    destinations and make unforgettable memories. Sign up now and let the journey begin!"
+    primary_button: "How Does It Work"
+    secondary_button: "Sign Up"
+
+  popular:
+    title: "Popular places"
+    description: "Explore the most popular places and start travelling"
+    card_button: "View trip"
+    primary_button: "View All"
+
+  destinations:
+    title: "Explore all destinations"
+    description: "Don't know where you want to go? Take a look at all types of 
+    road trips and find the road trip that's made for you."
+    primary_button: "Explore Destinations"
+
+about:
+  page_title: "about"
+  hero:
+    title: "Discover Xtripo’s features"
+    description: "Explore the powerful functionalities of Xtripo and plan your perfect road trip."
+  
+  feature:
+    one:
+      title: "Discover the perfect roadtrip experience"
+      description: "Xtripo is your ultimate road trip planning companion. 
+      With our advanced tools, you can effortlessly create your ideal route, 
+      receive real-time updates on weather and traffic, and discover the best accommodations, 
+      attractions, and hotels along the way. Let Xtripo streamline your planning process, 
+      so you can enjoy every moment of your journey."
+      primary_button: "Try It Out"
+      secondary_button: "Sign Up"
+  
+    two:
+      title: "Smart route optimization for seamless travel"
+      description: "Experience seamless travel with Xtripo's smart route 
+      optimization feature. Using advanced artificial intelligence algorithms, 
+      Xtripo analyzes real-time traffic data, road conditions, and historical travel 
+      patterns to suggest the most efficient routes for your road trip. Say goodbye to 
+      unexpected delays and traffic jams – with Xtripo, you'll always be on the 
+      fastest and most convenient route to your destination."
+      primary_button: "Get Inspired"
+      secondary_button: "Sign Up"
+    
+    three:
+      title: "Choose your accommodation and attractions"
+      description: "With Xtripo, you have the freedom to choose your ideal 
+      accommodation and attractions in the area of your pitstops. Whether 
+      you prefer a cozy bed and breakfast or a luxurious hotel, Xtripo provides a 
+      comprehensive selection of options to suit your preferences. Additionally, 
+      you can explore a wide range of attractions, from historical landmarks to natural wonders, 
+      ensuring that your road trip is filled with unforgettable experiences."
+      primary_button: "Try It Out"
+
+explore_trips:
+  page_title: "explore-trips"
+  hero:
+    title: "Find the road trip that suits you"
+    description: "Discover a variety of pre-made road trips 
+    designed to inspire your next adventure. 
+    Filter by destination, trip type, and more to 
+    find the perfect journey for you."
+
+  search:
+    destination: 
+      label: "Destination"
+      placeholder: "Where are you going?"
+    type: 
+      label: "Type of road trip"
+      placeholder: "Select a type"
+    button: "Search"
+
+  filter:
+    title: "Filter your search"
+    destination_label: "Destination"
+    trip_type_label: "Type of road trip"
+    apply_button: "Apply Filters"
+    reset_button: "Reset Filters"
+
+  results:
+    title: "Search results"
+    no_results: "No road trips found matching your criteria. Please adjust your filters and try again."
+    view_details_button: "View Details"
+    duration_label: "Duration"
+    distance_label: "Distance"
+    highlights_label: "Highlights"
+
+  featured_trips:
+    title: "Featured trips"
+    description: "Check out some of our most popular road trips, handpicked to give you an unforgettable experience."
+
+  testimonials:
+    title: "Traveler reviews"
+    description: "See what others are saying about their road trip experiences with Xtripo."
+
+  call_to_action:
+    title: "Ready to hit the road?"
+    description: "Sign up now to create your own road trip or explore more trips curated by fellow travelers."
+    primary_button: "Sign Up"
+    secondary_button: "Learn More"
