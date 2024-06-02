@@ -1,108 +1,111 @@
 <!DOCTYPE html>
 <html class="overflow-x-hidden">
 
-  <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %} | {{ 'app.suffix'|trans|raw }}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-    <script src="https://kit.fontawesome.com/93e054a147.js" crossorigin="anonymous"></script>
-    {% block stylesheets %}
-      {{ encore_entry_link_tags('app') }}
-    {% endblock %}
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}{% endblock %} | {{ 'app.suffix'|trans|raw }}</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+  <script src="https://kit.fontawesome.com/93e054a147.js" crossorigin="anonymous"></script>
+  {% block stylesheets %}
+  {{ encore_entry_link_tags('app') }}
+  {% endblock %}
+</head>
 
-  <body class="font-poppins flex flex-col min-h-screen mx-auto justify-center items-center content-center bg-primary text-primary w-11/12 2xl:w-4/5">
+<body class="font-poppins flex flex-col min-h-screen mx-auto justify-center items-center content-center bg-primary text-primary w-11/12 2xl:w-4/5">
 
-    {% block nav %}
+  {% block nav %}
     <nav class="w-full flex flex-row z-10 items-center justify-between flex-wrap bg-primary rounded-full px-9 py-4 mt-8 border border-neutral shadow-lg">
 
-      <!-- Logo -->
-      <div class="text-primary">
-          <a href="{{ path('app_home') }}" class="logo">{{ 'app.logo'|trans }}</a>
-      </div>
+    <!-- Logo -->
+    <div class="text-primary">
+      <a href="{{ path('app_home') }}" class="logo">{{ 'app.logo'|trans }}</a>
+    </div>
 
       
-      <div class="flex flex-row">
-        <div class="lg:flex md:items-center md:w-auto md:gap-3 lg:gap-8 hidden">
+    <div class="flex flex-row">
+      <div class="lg:flex md:items-center md:w-auto md:gap-3 lg:gap-8 hidden">
+        <div class="text-base md:flex-grow flex gap-6 lg:gap-10">
+          <a href="{{ path('app_explore_trips') }}"
+            class="text-primary self-center font-normal transition-all duration-200 underline-animation {% if app.request.attributes.get('_route') == 'app_explore_trips' %}active{% endif %}">
+            {{ 'navigation.explore_trips'|trans }}
+          </a>
 
-          <div class="text-base md:flex-grow flex gap-5 lg:gap-6">
-            <a href="{{ path('app_explore_trips') }}" class="block btn-secondary btn-neutral-text md:inline-block lg:mt-0 text-primary">{{ 'navigation.explore_trips'|trans }}</a>
-            <a href="{{ path('app_planner') }}" class="block btn-secondary btn-neutral-text md:inline-block lg:mt-0 text-primary">{{ 'navigation.trip_planner'|trans }}</a>
-            <a href="{{ path('app_about') }}" class="block btn-secondary btn-neutral-text md:inline-block lg:mt-0 text-primary">{{ 'navigation.about'|trans }}</a>
-            <a class="px-4 cursor-none self-center">{{ 'navigation.divider'|trans }}</a>
-          </div>
-
-          <div class="flex">
-
-            {% if app.user %}
-
-                <a href="{{ path('app_profile') }}" class="text px-2 text-lg text-primary font-light self-center transfrom transition-all duration-200 hover:scale-110">
-                  <p>{{ app.user.firstName }}</p>
-                </a>
-
-                <a href="{{ path('app_logout') }}" class="btn btn-neutral-text flex flex-row items-center ml-2 gap-4">
-                  {{ 'navigation.logout'|trans }}
-                  <i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>
-                </a>
-
-            {% else %}
-
-                <a href="{{ path('app_login') }}" class="btn-secondary btn-green-text">
-                    {{ 'navigation.login'|trans }}
-                </a>
-
-                <a href="{{ path('app_register') }}" class="btn-secondary btn-orange flex items-center ml-2 gap-2">
-                    {{ 'navigation.register'|trans }}
-                    <i class="fa-solid fa-circle-arrow-right fa-lg"></i>
-                </a>
-
-              {% endif %}
-          </div>
+          <a href="{{ path('app_planner') }}" class="text-primary self-center font-normal transfrom transition-all duration-200 hover:scale-110 hover:font-semibold">{{ 'navigation.trip_planner'|trans }}</a>
+          <a href="{{ path('app_about') }}" class="text-primary self-center font-normal transfrom transition-all duration-200 hover:scale-110 hover:font-semibold">{{ 'navigation.about'|trans }}</a>
+          <a class="px-4 cursor-default self-center">{{ 'navigation.divider'|trans }}</a>
         </div>
 
         <div class="flex">
+
+          {% if app.user %}
+
+                <a href="{{ path('app_profile') }}" class="text px-2 text-lg text-primary font-light self-center transfrom transition-all duration-200 hover:scale-110">
+                  <p>{{ app.user.firstName }}</p>
+          </a>
+
+          <a href="{{ path('app_logout') }}" class="btn btn-neutral-text flex flex-row items-center ml-2 gap-4">
+            {{ 'navigation.logout'|trans }}
+                  <i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>
+          </a>
+
+          {% else %}
+
+          <a href="{{ path('app_login') }}" class="btn-secondary btn-green-text">
+            {{ 'navigation.login'|trans }}
+          </a>
+
+          <a href="{{ path('app_register') }}" class="btn-secondary btn-orange flex items-center ml-2 gap-2">
+            {{ 'navigation.register'|trans }}
+            <i class="fa-solid fa-circle-arrow-right fa-lg"></i>
+          </a>
+
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="flex">
             <button class="moon cursor-pointer px-4 mx-2 py-2 border border-primary rounded-full text-primary self-center items-end hover:text-invert hover:bg-invert duration-500"><i class="fa-solid fa-moon"></i></button>
             <button class="sun cursor-pointer px-4 mx-2 py-2 border border-primary rounded-full text-primary self-center items-end hover:text-invert hover:bg-invert duration-500"><i class="fa-solid fa-sun"></i></button>
-        </div>
-
-        <div class="block lg:hidden">
-          <button class="btn btn-neutral-text"><i class="fa-solid fa-bars fa-xl"></i></button>
-        </div>
-
       </div>
-    </nav>
-    {% endblock %}
 
-    {% block body %}{% endblock %}
+      <div class="block lg:hidden">
+        <button class="btn btn-neutral-text"><i class="fa-solid fa-bars fa-xl"></i></button>
+      </div>
 
-    {% block footer %}
+    </div>
+  </nav>
+  {% endblock %}
+
+  {% block body %}{% endblock %}
+
+  {% block footer %}
 
       <footer class="w-full flex flex-col lg:flex-row gap-20 items-top justify-between pt-10 pb-24 px-16 mt-20 xl:mt-36 border border-neutral shadow-lg rounded-t-20">
 
-        <div class="flex flex-col justify-items-start gap-4">
-          <span class="font-semibold text-4xl tracking-tight self-start flex-grow">{{ 'app.logo'|trans }}</span>
-          <div class="text-base lg:flex-grow">
-            <a href="{{ path('app_explore_trips') }}" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.explore_trips'|trans }}</a>
-            <a href="{{ path('app_planner') }}" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.trip_planner'|trans }}</a>
-            <a href="{{ path('app_about') }}" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mt-3">{{ 'navigation.about'|trans }}</a>
-          </div>
-        </div>
+    <div class="flex flex-col justify-items-start gap-4">
+      <span class="font-semibold text-4xl tracking-tight self-start flex-grow">{{ 'app.logo'|trans }}</span>
+      <div class="text-base lg:flex-grow">
+        <a href="{{ path('app_explore_trips') }}" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.explore_trips'|trans }}</a>
+        <a href="{{ path('app_planner') }}" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.trip_planner'|trans }}</a>
+        <a href="{{ path('app_about') }}" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mt-3">{{ 'navigation.about'|trans }}</a>
+      </div>
+    </div>
 
-        <div class="flex flex-col gap-4">
-          <h4>{{ 'footer.subscribe'|trans }}</h4>
-            <div class="flex flex-col lg:flex-row gap-6">
-              <input class="shadow-md rounded-8 w-80 py-2 px-3 text-lg" placeholder="Email" type="" name="" value="">
-              <button class="btn btn-orange flex self-start items-center lg:ml-2 gap-2">{{ 'footer.button'|trans }}<i class="fa-solid fa-circle-arrow-right fa-lg"></i></button>
-            </div>
-        </div>
-      
-      </footer>
+    <div class="flex flex-col gap-4">
+      <h4>{{ 'footer.subscribe'|trans }}</h4>
+      <div class="flex flex-col lg:flex-row gap-6">
+        <input class="shadow-md rounded-8 w-80 py-2 px-3 text-lg" placeholder="Email" type="" name="" value="">
+        <button class="btn btn-orange flex self-start items-center lg:ml-2 gap-2">{{ 'footer.button'|trans }}<i class="fa-solid fa-circle-arrow-right fa-lg"></i></button>
+      </div>
+    </div>
 
-    {% endblock %}
+  </footer>
 
-  </body>
-  {% block javascripts %}
-    {{ encore_entry_script_tags('app') }}
   {% endblock %}
+
+</body>
+{% block javascripts %}
+{{ encore_entry_script_tags('app') }}
+{% endblock %}
 
 </html>
