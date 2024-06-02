@@ -52,8 +52,9 @@
     </nav>
     {% endblock %}
 
-    {% block body %}{% endblock %}
-
+    <main class="flex-grow">
+        {% block main%}{% endblock %}
+    </main>
     {% block footer %}
 
       <footer class="w-full flex flex-col lg:flex-row gap-20 items-top justify-between pt-10 pb-24 px-16 mt-20 xl:mt-36 border border-neutral shadow-lg rounded-t-20">
@@ -61,9 +62,9 @@
         <div class="flex flex-col justify-items-start gap-4">
           <span class="font-semibold text-4xl tracking-tight self-start flex-grow">{{ 'app.logo'|trans }}</span>
           <div class="text-base lg:flex-grow">
-            <a href="#responsive-header" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.explore_trips'|trans }}</a>
-            <a href="#responsive-header" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.trip_planner'|trans }}</a>
-            <a href="#responsive-header" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mt-3">{{ 'navigation.about'|trans }}</a>
+            <a href="{{ path('app_explore_trips') }}" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.explore_trips'|trans }}</a>
+            <a href="{{ path('app_planner') }}" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.trip_planner'|trans }}</a>
+            <a href="{{ path('app_about') }}" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mt-3">{{ 'navigation.about'|trans }}</a>
           </div>
         </div>
 
