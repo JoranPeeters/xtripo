@@ -189,3 +189,9 @@ explore_trips:
     description: "Sign up now to create your own road trip or explore more trips curated by fellow travelers."
     primary_button: "Sign Up"
     secondary_button: "Learn More"
+
+register:
+  page_title: "about"
+  hero:
+    title: "Discover Xtripo’s features"
+    description: "Explore the powerful functionalities of Xtripo and plan your perfect road trip."

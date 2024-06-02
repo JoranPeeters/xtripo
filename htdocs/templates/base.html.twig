@@ -33,8 +33,16 @@
           </div>
 
           <div class="flex">
-            <button href="#" class="btn-secondary btn-green-text">{{ 'navigation.login'|trans }}</button>
-            <button href="#" class="btn-secondary btn-orange flex items-center ml-2 gap-2">{{ 'navigation.register'|trans }}<i class="fa-solid fa-circle-arrow-right fa-lg"></i></button>
+
+            <a href="#" class="btn-secondary btn-green-text">
+                {{ 'navigation.login'|trans }}
+            </a>
+
+            <a href="{{ path('app_register') }}" class="btn-secondary btn-orange flex items-center ml-2 gap-2">
+                {{ 'navigation.register'|trans }}
+                <i class="fa-solid fa-circle-arrow-right fa-lg"></i>
+            </a>
+
           </div>
 
         </div>
@@ -52,9 +60,8 @@
     </nav>
     {% endblock %}
 
-    <main class="flex-grow">
-        {% block main%}{% endblock %}
-    </main>
+    {% block body %}{% endblock %}
+
     {% block footer %}
 
       <footer class="w-full flex flex-col lg:flex-row gap-20 items-top justify-between pt-10 pb-24 px-16 mt-20 xl:mt-36 border border-neutral shadow-lg rounded-t-20">
