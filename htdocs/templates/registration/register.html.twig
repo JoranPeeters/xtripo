@@ -1,19 +1,81 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'about.page_title'|trans|raw }}{% endblock %}
+{% block nav %} {% endblock %}
+{% block footer %} {% endblock %}
+
+{% block title %}{{ 'register.title'|trans }}{% endblock %}
+
 
 {% block body %}
-    <h1>Register</h1>
 
-    {{ form_errors(registrationForm) }}
+    <div class="flex">
+        <button class="moon cursor-pointer px-4 mx-2 py-2 border border-primary rounded-full text-primary self-center items-end hover:text-invert hover:bg-invert duration-500"><i class="fa-solid fa-moon"></i></button>
+        <button class="sun cursor-pointer px-4 mx-2 py-2 border border-primary rounded-full text-primary self-center items-end hover:text-invert hover:bg-invert duration-500"><i class="fa-solid fa-sun"></i></button>
+    </div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+    <div class="flex justify-center items-center min-h-screen">
+        <div class="flex items-center h-[50%] w-full md:w-4/5 lg:w-4/6 rounded-20 overflow-hidden shadow-2xl bg-primary">
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            <div class="w-1/2 hidden md:block overflow-hidden ">
+                <img class="object-contain h-full w-full shadow-inner transition-transform duration-1000 hover:scale-105" src="{{ asset('build/images/sun.png') }}" alt="registration image">
+            </div>
+
+            <div class="w-full md:w-1/2 p-8">
+                
+                <div class="text-start mb-3">
+                    <a href="{{ path('app_home') }}" class="logo">{{ 'app.logo'|trans }}</a>
+                    <h2 class="font-metropolis text-2xl text-primary">{{ 'register.sign_up'|trans }}</h2>
+                    <p class="mr-3">{{ 'register.member'|trans }}<a href="{{ path('app_login') }}" class="text-green hover:text-dark-green">{{ 'register.login'|trans }}</a></p>
+                </div>
+
+                {{ form_start(registrationForm, {'attr': {'class': 'space-y-4'}}) }}
+                    <div class="flex gap-4">
+                        <div class="w-1/2">
+                            {{ form_row(registrationForm.firstName, {
+                                'label': false,
+                                'attr': {
+                                    'class': 'form-input',
+                                    'placeholder': 'First Name'
+                                }
+                            }) }}
+                        </div>
+                        <div class="w-1/2">
+                            {{ form_row(registrationForm.lastName, {
+                                'label': false,
+                                'attr': {
+                                    'class': 'form-input',
+                                    'placeholder': 'Last Name'
+                                }
+                            }) }}
+                        </div>
+                    </div>
+                    {{ form_row(registrationForm.email, {
+                        'label': false,
+                        'attr': {
+                            'class': 'form-input',
+                            'placeholder': 'Email'
+                        }
+                    }) }}
+                    {{ form_row(registrationForm.plainPassword, {
+                        'label': false,
+                        'attr': {
+                            'class': 'form-input',
+                            'placeholder': 'Password'
+                        }
+                    }) }}
+                    {{ form_row(registrationForm.agreeTerms, {
+                        'label': false,
+                        'attr': {
+                            'class': 'form-checkbox text-green focus:ring-brand-light-orange'
+                        }
+                    }) }}
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-orange w-full py-3 mt-6 font-semibold text-lg">{{ 'register.sign_up'|trans }}</button>
+                    </div>
+                {{ form_end(registrationForm) }}
+            </div>
+        </div>
+    </div>
+
+
 {% endblock %}

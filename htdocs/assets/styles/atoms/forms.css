@@ -1,0 +1,5 @@
+/* Forms */
+
+.form-input{
+    @apply px-4 py-2 rounded-8 w-full bg-transparent border border-primary focus:outline-none focus:border-orange focus:ring-1 focus:ring-brand-light-orange;
+}

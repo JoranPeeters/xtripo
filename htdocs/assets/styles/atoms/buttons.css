@@ -1,3 +1,5 @@
+/* Buttons */
+
 .btn-secondary {
     @apply px-3 py-2 lg:px-4 lg:py-2 rounded-full font-poppins font-normal text-base lg:text-lg duration-300;
 }

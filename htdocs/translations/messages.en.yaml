@@ -39,6 +39,14 @@ form:
     required: "This field is required."
     email: "Please enter a valid email address."
     min_length: "This field must be at least {min} characters long."
+  error:
+    title: "error"
+    message: "Incorrect email or password!"
+  info:
+    title: "info"
+    logged_in: "You are now logged in as <b>%USER_FIRST_NAME%</b>"
+
+
 
 # Button texts
 buttons:
@@ -190,8 +198,26 @@ explore_trips:
     primary_button: "Sign Up"
     secondary_button: "Learn More"
 
+planner:
+  page_title: "planner"
+
 register:
-  page_title: "about"
-  hero:
-    title: "Discover Xtripo’s features"
-    description: "Explore the powerful functionalities of Xtripo and plan your perfect road trip."
+  page_title: "register"
+  sign_up: "Sign Up"
+  login: "Log in now"
+  member: "Already a member?"
+
+login:
+  page_title: "login"
+  logout: "Logout"
+  login: "Log In"
+  new_user: "New User? Register here"
+  sign_up: "Sign Up"
+
+profile:
+  page_title: "profile"
+  edit_profile: "Edit Profile"
+  view_profile: "View Profile"
+  settings: "User Settings"
+  change_password: "Change Password"
+  delete_account: "Delete Account"

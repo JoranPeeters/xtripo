@@ -18,7 +18,7 @@
 
       <!-- Logo -->
       <div class="text-primary">
-          <a href="{{ path('app_home') }}" class="font-semibold text-4xl tracking-tight self-start flex-grow cursor-pointer transform transition-all duration-200 ease-in-out hover:tracking-widest">{{ 'app.logo'|trans }}</a>
+          <a href="{{ path('app_home') }}" class="logo">{{ 'app.logo'|trans }}</a>
       </div>
 
       
@@ -29,22 +29,35 @@
             <a href="{{ path('app_explore_trips') }}" class="block btn-secondary btn-neutral-text md:inline-block lg:mt-0 text-primary">{{ 'navigation.explore_trips'|trans }}</a>
             <a href="{{ path('app_planner') }}" class="block btn-secondary btn-neutral-text md:inline-block lg:mt-0 text-primary">{{ 'navigation.trip_planner'|trans }}</a>
             <a href="{{ path('app_about') }}" class="block btn-secondary btn-neutral-text md:inline-block lg:mt-0 text-primary">{{ 'navigation.about'|trans }}</a>
-            <a class="px-4 py-2">{{ 'navigation.divider'|trans }}</a>
+            <a class="px-4 cursor-none self-center">{{ 'navigation.divider'|trans }}</a>
           </div>
 
           <div class="flex">
 
-            <a href="#" class="btn-secondary btn-green-text">
-                {{ 'navigation.login'|trans }}
-            </a>
+            {% if app.user %}
 
-            <a href="{{ path('app_register') }}" class="btn-secondary btn-orange flex items-center ml-2 gap-2">
-                {{ 'navigation.register'|trans }}
-                <i class="fa-solid fa-circle-arrow-right fa-lg"></i>
-            </a>
+                <a href="{{ path('app_profile') }}" class="text px-2 text-lg text-primary font-light self-center transfrom transition-all duration-200 hover:scale-110">
+                  <p>{{ app.user.firstName }}</p>
+                </a>
 
+                <a href="{{ path('app_logout') }}" class="btn btn-neutral-text flex flex-row items-center ml-2 gap-4">
+                  {{ 'navigation.logout'|trans }}
+                  <i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>
+                </a>
+
+            {% else %}
+
+                <a href="{{ path('app_login') }}" class="btn-secondary btn-green-text">
+                    {{ 'navigation.login'|trans }}
+                </a>
+
+                <a href="{{ path('app_register') }}" class="btn-secondary btn-orange flex items-center ml-2 gap-2">
+                    {{ 'navigation.register'|trans }}
+                    <i class="fa-solid fa-circle-arrow-right fa-lg"></i>
+                </a>
+
+              {% endif %}
           </div>
-
         </div>
 
         <div class="flex">

@@ -1,0 +1,5 @@
+/* Logo */
+
+.logo{
+    @apply font-semibold text-4xl tracking-tight self-start flex-grow cursor-pointer transform transition-all duration-200 ease-in-out hover:tracking-widest;
+}

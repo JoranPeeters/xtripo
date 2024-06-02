@@ -14,6 +14,10 @@
 @layer components {
   /* Atoms */
   @import './atoms/buttons.css';
+  @import './atoms/logo.css';
+  @import './atoms/forms.css';
+
+  /*animations*/
   @import './animations/animations.css';
 }
 

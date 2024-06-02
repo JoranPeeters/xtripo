@@ -101,6 +101,8 @@ module.exports = {
       'light-orange': 'var(--text-light-orange)',
       grey: 'var(--text-grey)',
       transparent: 'var(--text-transparent)',
+      success: 'var(--color-state-success)',
+      error: 'var(--color-state-error)',
 
     },
     backgroundColor: {
@@ -130,6 +132,8 @@ module.exports = {
       white: 'var(--border-white)',
       transparent: 'var(--border-transparent)',
       invert: 'var(--border-invert)',
+      success: 'var(--color-state-success)',
+      error: 'var(--color-state-error)',
     },
   },
   plugins: [
