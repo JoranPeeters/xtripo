@@ -46,8 +46,6 @@ form:
     title: "info"
     logged_in: "You are now logged in as <b>%USER_FIRST_NAME%</b>"
 
-
-
 # Button texts
 buttons:
   submit: "Submit"

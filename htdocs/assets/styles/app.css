@@ -16,6 +16,7 @@
   @import './atoms/buttons.css';
   @import './atoms/logo.css';
   @import './atoms/forms.css';
+  @import './atoms/navigation.css';
 
   /*animations*/
   @import './animations/animations.css';

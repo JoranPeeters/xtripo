@@ -1,0 +1,23 @@
+/* Navigation */
+
+.nav-link {
+    @apply text-primary self-center font-normal transition-all duration-200 relative;
+
+    &:hover::after {
+    @apply scale-x-100;
+    }
+
+    &:hover {
+    @apply scale-110 font-semibold;
+    }
+
+    &::after {
+    @apply content-[''] absolute left-0 bottom-[-2px] w-full h-[2px] scale-x-0 transition-transform duration-300 transform origin-left;
+    }
+}
+
+.active::after {
+    @apply scale-x-100;
+}
+  
+  
