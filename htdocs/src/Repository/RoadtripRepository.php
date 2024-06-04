@@ -21,28 +21,28 @@ class RoadtripRepository extends ServiceEntityRepository
         parent::__construct($registry, Roadtrip::class);
     }
 
-    //    /**
-    //     * @return Roadtrip[] Returns an array of Roadtrip objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('r.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function save(Roadtrip $roadtrip, bool $flush = false): void
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($roadtrip);
 
-    //    public function findOneBySomeField($value): ?Roadtrip
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($flush) {
+            $entityManager->flush();
+        }
+    }
+
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+    }
+
+    public function remove(Roadtrip $roadtrip, bool $flush = false): void
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->remove($roadtrip);
+
+        if ($flush) {
+            $entityManager->flush();
+        }
+    }
 }

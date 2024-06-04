@@ -5,7 +5,10 @@
  * which should already be in your base.html.twig.
  */
 import './styles/app.css';
+
 import './js/mode/themeSwitcher.js';
+
+//import './js/vehicle/vehicle-models.js';
 
 console.log('app.js loaded! 🎉');
 

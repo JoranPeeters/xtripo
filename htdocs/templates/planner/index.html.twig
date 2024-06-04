@@ -3,5 +3,13 @@
 {% block title %}{{ 'planner.page_title'|trans|raw }}{% endblock %}
 
 {% block body %}
+    <h1>Plan Your Road Trip</h1>
+
+<h1>Create a Roadtrip</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary">Generate Roadtrip</button>
+    {{ form_end(form) }}
 
 {% endblock %}
