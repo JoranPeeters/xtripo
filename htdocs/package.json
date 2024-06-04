@@ -23,6 +23,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "ldrs": "^1.0.2"
+        "ldrs": "^1.0.2",
+        "openai": "^4.47.3"
     }
 }
