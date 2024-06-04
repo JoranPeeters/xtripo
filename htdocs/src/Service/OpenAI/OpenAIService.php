@@ -16,7 +16,7 @@ class OpenAIService
 
     public function getEuropeanCountries(): array
     {
-        $model = 'gpt-4o';
+        $model = 'gpt-3.5-turbo';
         $temperature = 0.3;
         $systemPrompt = 'You are a data deliverer. Present your response once, in a valid JSON object following a specific template.
                         Create a JSON array of objects. Each object should have a "country" key with the country name as the value, and a "cities" key with an array of major cities in that country.
