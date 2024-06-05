@@ -23,11 +23,10 @@ class RoadtripRepository extends ServiceEntityRepository
 
     public function save(Roadtrip $roadtrip, bool $flush = false): void
     {
-        $entityManager = $this->getEntityManager();
-        $entityManager->persist($roadtrip);
+        $this->getEntityManager()->persist($roadtrip);
 
         if ($flush) {
-            $entityManager->flush();
+            $this->flush();
         }
     }
 
@@ -36,13 +35,8 @@ class RoadtripRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-    public function remove(Roadtrip $roadtrip, bool $flush = false): void
+    public function remove(Roadtrip $roadtrip): void
     {
-        $entityManager = $this->getEntityManager();
-        $entityManager->remove($roadtrip);
-
-        if ($flush) {
-            $entityManager->flush();
-        }
+        $this->getEntityManager()->remove($roadtrip);
     }
 }

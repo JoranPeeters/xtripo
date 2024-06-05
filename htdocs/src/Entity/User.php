@@ -7,10 +7,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -22,10 +26,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $firstName = null;
+    private ?string $first_name = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $lastName = null;
+    private ?string $last_name = null;
 
     /**
      * @var list<string> The user roles
@@ -38,6 +42,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Roadtrip::class)]
+    private Collection $roadtrips;
+
+    public function __construct()
+    {
+        $this->roadtrips = new ArrayCollection();
+    }
+
+    #[ORM\Column(type: 'datetime')]
+    private $created_at;
+
+    #[ORM\Column(type: 'datetime')]
+    private $updated_at;
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->created_at = new \DateTimeImmutable();
+        $this->setUpdatedAtValue();
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updated_at = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -58,24 +89,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getFirstName(): ?string
     {
-        return $this->firstName;
+        return $this->first_name;
     }
 
-    public function setFirstName(string $firstName): static
+    public function setFirstName(string $first_name): static
     {
-        $this->firstName = $firstName;
+        $this->first_name = $first_name;
 
         return $this;
     }
 
     public function getLastName(): ?string
     {
-        return $this->lastName;
+        return $this->last_name;
     }
 
-    public function setLastName(string $lastName): static
+    public function setLastName(string $last_name): static
     {
-        $this->lastName = $lastName;
+        $this->last_name = $last_name;
 
         return $this;
     }
@@ -136,5 +167,45 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_at;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updated_at;
+    }
+
+    /**
+     * @return Collection|Roadtrip[]
+     */
+    public function getRoadtrips(): Collection
+    {
+        return $this->roadtrips;
+    }
+
+    public function addRoadtrip(Roadtrip $roadtrip): self
+    {
+        if (!$this->roadtrips->contains($roadtrip)) {
+            $this->roadtrips[] = $roadtrip;
+            $roadtrip->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoadtrip(Roadtrip $roadtrip): self
+    {
+        if ($this->roadtrips->removeElement($roadtrip)) {
+            // Set the owning side to null (unless already changed)
+            if ($roadtrip->getUser() === $this) {
+                $roadtrip->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

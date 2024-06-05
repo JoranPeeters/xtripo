@@ -4,43 +4,53 @@ namespace App\Entity;
 
 use App\Repository\RentalVehicleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: RentalVehicleRepository::class)]
+#[ORM\Table(name: 'rental_vehicle')]
 #[ORM\HasLifecycleCallbacks]
 class RentalVehicle
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
-
-    #[ORM\ManyToOne(targetEntity: Roadtrip::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private $roadtrip;
+    #[ORM\Column]
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $type;
+    private ?string $vehicle_type = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $rental_company;
+    private ?string $model = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $pickup_location;
+    #[ORM\column(type: 'string', length: 255)]
+    private ?string $rental_company = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $dropoff_location;
+    #[ORM\column(type: 'string', length: 255)]
+    private ?string $pickup_location = null;
 
-    #[ORM\Column(type: 'date')]
-    private $start_date;
+    #[ORM\column(type: 'string', length: 255)]
+    private ?string $dropoff_location = null;
 
-    #[ORM\Column(type: 'date')]
-    private $end_date;
+    #[ORM\column(type: 'datetime')]
+    private $pickup_date;
+
+    #[ORM\column(type: 'datetime')]
+    private $dropoff_date;
 
     #[ORM\Column(type: 'datetime')]
     private $created_at;
 
     #[ORM\Column(type: 'datetime')]
     private $updated_at;
+
+    #[ORM\OneToMany(mappedBy: 'rental_vehicle', targetEntity: Roadtrip::class)]
+    private Collection $roadtrips;
+
+    public function __construct()
+    {
+        $this->roadtrips = new ArrayCollection();
+    }
 
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
@@ -60,26 +70,26 @@ class RentalVehicle
         return $this->id;
     }
 
-    public function getRoadtrip(): ?Roadtrip
+    public function getVehicleType(): ?string
     {
-        return $this->roadtrip;
+        return $this->vehicle_type;
     }
 
-    public function setRoadtrip(?Roadtrip $roadtrip): self
+    public function setVehicleType(string $vehicle_type): self
     {
-        $this->roadtrip = $roadtrip;
+        $this->vehicle_type = $vehicle_type;
 
         return $this;
+    }   
+
+    public function getModel(): ?string
+    {
+        return $this->model;
     }
 
-    public function getType(): ?string
+    public function setModel(string $model): self
     {
-        return $this->type;
-    }
-
-    public function setType(string $type): self
-    {
-        $this->type = $type;
+        $this->model = $model;
 
         return $this;
     }
@@ -120,26 +130,26 @@ class RentalVehicle
         return $this;
     }
 
-    public function getStartDate(): ?\DateTimeInterface
+    public function getPickupDate(): ?\DateTimeInterface
     {
-        return $this->start_date;
+        return $this->pickup_date;
     }
 
-    public function setStartDate(\DateTimeInterface $start_date): self
+    public function setPickupDate(\DateTimeInterface $pickup_date): self
     {
-        $this->start_date = $start_date;
+        $this->pickup_date = $pickup_date;
 
         return $this;
     }
 
-    public function getEndDate(): ?\DateTimeInterface
+    public function getDropoffDate(): ?\DateTimeInterface
     {
-        return $this->end_date;
+        return $this->dropoff_date;
     }
 
-    public function setEndDate(\DateTimeInterface $end_date): self
+    public function setDropoffDate(\DateTimeInterface $dropoff_date): self
     {
-        $this->end_date = $end_date;
+        $this->dropoff_date = $dropoff_date;
 
         return $this;
     }
@@ -149,22 +159,41 @@ class RentalVehicle
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): self
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updated_at): self
+    /**
+     * @return Collection|Roadtrip[]
+     */
+
+    public function getRoadtrips(): Collection
     {
-        $this->updated_at = $updated_at;
+        return $this->roadtrips;
+    }
+
+    public function addRoadtrip(Roadtrip $roadtrip): self
+    {
+        if (!$this->roadtrips->contains($roadtrip)) {
+            $this->roadtrips[] = $roadtrip;
+            $roadtrip->setRentalVehicle($this);
+        }
+
+        return $this;
+    } 
+    
+    public function removeRoadtrip(Roadtrip $roadtrip): self
+    {
+        if ($this->roadtrips->removeElement($roadtrip)) {
+            // set the owning side to null (unless already changed)
+            if ($roadtrip->getRentalVehicle() === $this) {
+                $roadtrip->setRentalVehicle(null);
+            }
+        }
 
         return $this;
     }
+
+
 }

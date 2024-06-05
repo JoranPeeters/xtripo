@@ -2,45 +2,55 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\WaypointRepository;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: WaypointRepository::class)]
+#[ORM\Table(name: 'waypoint')]
 #[ORM\HasLifecycleCallbacks]
 class Waypoint
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ORM\Column(type: 'integer')]
-    private $id;
-
-    #[ORM\ManyToOne(targetEntity: Roadtrip::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private $roadtrip;
-
-    #[ORM\Column(type: 'integer')]
-    private $day;
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $location_name;
+    private ?string $title = null;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $day = null;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $location_name = null;
 
     #[ORM\Column(type: 'string', length: 1000)]
-    private $description;
+    private ?string $description = null;    
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $coordinates;
+    #[ORM\Column(type: 'string', length: 1000)]   
+    private ?string $advice = null; 
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private $latitude;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private $longitude;
 
     #[ORM\Column(type: 'integer')]
-    private $distance; // Distance in kilometers for the day
+    private ?string $distance = null;
 
     #[ORM\Column(type: 'integer')]
-    private $popularity;
+    private ?string $popularity = null;
 
     #[ORM\Column(type: 'datetime')]
     private $created_at;
 
     #[ORM\Column(type: 'datetime')]
     private $updated_at;
+
+    #[ORM\ManyToOne(targetEntity: Roadtrip::class, inversedBy: 'waypoints')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $roadtrip;
 
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
@@ -60,24 +70,24 @@ class Waypoint
         return $this->id;
     }
 
-    public function getRoadtrip(): ?Roadtrip
+    public function getTitle(): ?string
     {
-        return $this->roadtrip;
+        return $this->title;
     }
 
-    public function setRoadtrip(?Roadtrip $roadtrip): self
+    public function setTitle(string $title): self
     {
-        $this->roadtrip = $roadtrip;
+        $this->title = $title;
 
         return $this;
     }
 
-    public function getDay(): ?int
+    public function getDay(): ?string
     {
         return $this->day;
     }
 
-    public function setDay(int $day): self
+    public function setDay(string $day): self
     {
         $this->day = $day;
 
@@ -108,36 +118,60 @@ class Waypoint
         return $this;
     }
 
-    public function getCoordinates(): ?string
+    public function getAdvice(): ?string
     {
-        return $this->coordinates;
+        return $this->advice;
     }
 
-    public function setCoordinates(string $coordinates): self
+    public function setAdvice(string $advice): self
     {
-        $this->coordinates = $coordinates;
+        $this->advice = $advice;
 
         return $this;
     }
 
-    public function getDistance(): ?int
+    public function getLatitude(): ?float
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(float $latitude): self
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    public function getLongitude(): ?float
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(float $longitude): self
+    {
+        $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getDistance(): ?string
     {
         return $this->distance;
     }
 
-    public function setDistance(int $distance): self
+    public function setDistance(string $distance): self
     {
         $this->distance = $distance;
 
         return $this;
     }
 
-    public function getPopularity(): ?int
+    public function getPopularity(): ?string
     {
         return $this->popularity;
     }
 
-    public function setPopularity(int $popularity): self
+    public function setPopularity(string $popularity): self
     {
         $this->popularity = $popularity;
 
@@ -152,5 +186,17 @@ class Waypoint
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updated_at;
+    }
+
+    public function getRoadtrip(): ?Roadtrip
+    {
+        return $this->roadtrip;
+    }
+
+    public function setRoadtrip(?Roadtrip $roadtrip): self
+    {
+        $this->roadtrip = $roadtrip;
+
+        return $this;
     }
 }

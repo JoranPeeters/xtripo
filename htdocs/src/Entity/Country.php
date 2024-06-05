@@ -2,20 +2,23 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CountryRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: CountryRepository::class)]
+#[ORM\Table(name: 'country')]
 #[ORM\HasLifecycleCallbacks]
 class Country
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ORM\Column(type: 'integer')]
-    private $id;
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private ?string $name = null;
 
     #[ORM\Column(type: 'integer')]
     private $popularity;
@@ -28,6 +31,14 @@ class Country
 
     #[ORM\Column(type: 'datetime')]
     private $updated_at;
+
+    #[ORM\OneToMany(mappedBy: 'roadtrip', targetEntity: Roadtrip::class)]
+    private Collection $roadtrips;
+
+    public function __construct()
+    {
+        $this->roadtrips = new ArrayCollection();
+    }
 
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
@@ -71,7 +82,7 @@ class Country
         return $this;
     }
 
-    public function getCities(): array
+    public function getCities(): ?array
     {
         return $this->cities;
     }
@@ -91,5 +102,32 @@ class Country
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updated_at;
+    }
+
+    public function getRoadtrips(): Collection
+    {
+        return $this->roadtrips;
+    }
+
+    public function addRoadtrip(Roadtrip $roadtrip): self
+    {
+        if (!$this->roadtrips->contains($roadtrip)) {
+            $this->roadtrips[] = $roadtrip;
+            $roadtrip->setCountry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoadtrip(Roadtrip $roadtrip): self
+    {
+        if ($this->roadtrips->removeElement($roadtrip)) {
+            // set the owning side to null (unless already changed)
+            if ($roadtrip->getCountry() === $this) {
+                $roadtrip->setCountry(null);
+            }
+        }
+
+        return $this;
     }
 }

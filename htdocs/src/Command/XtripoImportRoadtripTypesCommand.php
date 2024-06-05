@@ -6,16 +6,16 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use App\Service\Database\TypeService;
+use App\Service\Database\RoadtripTypeService;
 
 #[AsCommand(
-    name: 'xtripo:import-types',
-    description: 'This command will import Types to database',
+    name: 'xtripo:import-roadtrip-types',
+    description: 'This command will import Roadtrip Types to database',
 )]
-class XtripoImportTypesCommand extends Command
+class XtripoImportRoadtripTypesCommand extends Command
 {
     public function __construct(
-        private readonly TypeService $typeService,
+        private readonly RoadtripTypeService $typeService,
     )
     {
         parent::__construct();

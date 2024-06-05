@@ -23,11 +23,10 @@ class VehicleRepository extends ServiceEntityRepository
 
     public function save(Vehicle $vehicle, bool $flush = false): void
     {
-        $entityManager = $this->getEntityManager();
-        $entityManager->persist($vehicle);
+        $this->getEntityManager()->persist($vehicle);
 
         if ($flush) {
-            $entityManager->flush();
+            $this->flush();
         }
     }
 
@@ -36,13 +35,8 @@ class VehicleRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-    public function remove(Vehicle $vehicle, bool $flush = false): void
+    public function remove(Vehicle $vehicle): void
     {
-        $entityManager = $this->getEntityManager();
-        $entityManager->remove($vehicle);
-
-        if ($flush) {
-            $entityManager->flush();
-        }
+        $this->getEntityManager()->remove($vehicle);
     }
 }

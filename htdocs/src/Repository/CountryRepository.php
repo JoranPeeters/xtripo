@@ -23,11 +23,10 @@ class CountryRepository extends ServiceEntityRepository
 
     public function save(Country $country, bool $flush = false): void
     {
-        $entityManager = $this->getEntityManager();
-        $entityManager->persist($country);
+        $this->getEntityManager()->persist($country);
 
         if ($flush) {
-            $entityManager->flush();
+            $this->flush();
         }
     }
 
@@ -36,13 +35,8 @@ class CountryRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-    public function remove(Country $country, bool $flush = false): void
+    public function remove(Country $country): void
     {
-        $entityManager = $this->getEntityManager();
-        $entityManager->remove($country);
-
-        if ($flush) {
-            $entityManager->flush();
-        }
+        $this->getEntityManager()->remove($country);
     }
 }

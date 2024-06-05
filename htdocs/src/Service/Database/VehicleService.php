@@ -16,10 +16,10 @@ class VehicleService
     public function addVehicle(array $vehicles): void
     {
         foreach ($vehicles as $vehicleData) {
-            if (!$this->vehicleRepository->findOneBy(['type' => $vehicleData['type']])) {
+            if (!$this->vehicleRepository->findOneBy(['vehicle_type' => $vehicleData['type']])) {
                 $type = new Vehicle();
                 $type
-                    ->setType($vehicleData['type'])
+                    ->setVehicleType($vehicleData['type'])
                     ->setModels($vehicleData['models'])
                     ->setFuelTypes($vehicleData['fuel_types']);
 
@@ -28,4 +28,3 @@ class VehicleService
         }
     }
 }
-

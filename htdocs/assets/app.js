@@ -8,7 +8,7 @@ import './styles/app.css';
 
 import './js/mode/themeSwitcher.js';
 
-//import './js/vehicle/vehicle-models.js';
+import './js/vehicle/vehicle-models.js';
 
 console.log('app.js loaded! 🎉');
 

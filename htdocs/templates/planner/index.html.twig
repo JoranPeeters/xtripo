@@ -1,15 +1,22 @@
+{# templates/roadtrip/planner.html.twig #}
+
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'planner.page_title'|trans|raw }}{% endblock %}
-
 {% block body %}
-    <h1>Plan Your Road Trip</h1>
-
-<h1>Create a Roadtrip</h1>
-
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit" class="btn btn-primary">Generate Roadtrip</button>
+    <h1>Plan Your Roadtrip</h1>
+    {{ form_start(form, { 'attr': { 'action': path('app_planner'), 'method': 'POST' } }) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.country) }}
+        {{ form_row(form.travelers) }}
+        {{ form_row(form.start_date) }}
+        {{ form_row(form.end_date) }}
+        {{ form_row(form.rent_car) }}
+        {{ form_row(form.vehicle) }}
+        {{ form_row(form.cost_preferences) }}
+        {{ form_row(form.distance) }}
+        {{ form_row(form.roadtrip_types) }}
+        {{ form_row(form.save) }}
     {{ form_end(form) }}
 
+    <script src="{{ asset('path/to/your/javascript/file.js') }}"></script>
 {% endblock %}

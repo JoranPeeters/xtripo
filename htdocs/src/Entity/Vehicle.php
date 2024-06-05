@@ -1,35 +1,44 @@
 <?php
 
-// src/Entity/Vehicle.php
-
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\VehicleRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: VehicleRepository::class)]
+#[ORM\Table(name: 'vehicle')]
 #[ORM\HasLifecycleCallbacks]
 class Vehicle
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
+    #[ORM\Column]
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $type;
-
-    #[ORM\Column(type: 'array')]
-    private $fuel_types = [];
+    private ?string $vehicle_type = null;
 
     #[ORM\Column(type: 'array')]
     private $models = [];
+
+    #[ORM\Column(type: 'array')]
+    private $fuel_types = [];
 
     #[ORM\Column(type: 'datetime')]
     private $created_at;
 
     #[ORM\Column(type: 'datetime')]
     private $updated_at;
+
+    #[ORM\OneToMany(mappedBy: 'vehicle', targetEntity: Roadtrip::class)]
+    private Collection $roadtrips;
+
+    public function __construct()
+    {
+        $this->roadtrips = new ArrayCollection();
+    }
 
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
@@ -49,31 +58,19 @@ class Vehicle
         return $this->id;
     }
 
-    public function getType(): ?string
+    public function getVehicleType(): ?string
     {
-        return $this->type;
+        return $this->vehicle_type;
     }
 
-    public function setType(string $type): self
+    public function setVehicleType(string $vehicle_type): self
     {
-        $this->type = $type;
+        $this->vehicle_type = $vehicle_type;
 
         return $this;
     }
 
-    public function getFuelTypes(): array
-    {
-        return $this->fuel_types;
-    }
-
-    public function setFuelTypes(array $fuel_types): self
-    {
-        $this->fuel_types = $fuel_types;
-
-        return $this;
-    }
-
-    public function getModels(): array
+    public function getModels(): ?array
     {
         return $this->models;
     }
@@ -81,6 +78,18 @@ class Vehicle
     public function setModels(array $models): self
     {
         $this->models = $models;
+
+        return $this;
+    }
+
+    public function getFuelTypes(): ?array
+    {
+        return $this->fuel_types;
+    }
+
+    public function setFuelTypes(array $fuel_types): self
+    {
+        $this->fuel_types = $fuel_types;
 
         return $this;
     }
@@ -94,5 +103,34 @@ class Vehicle
     {
         return $this->updated_at;
     }
-}
 
+    /**
+     * @return Collection|Roadtrip[]
+     */
+    public function getRoadtrips(): Collection
+    {
+        return $this->roadtrips;
+    }
+
+    public function addRoadtrip(Roadtrip $roadtrip): self
+    {
+        if (!$this->roadtrips->contains($roadtrip)) {
+            $this->roadtrips[] = $roadtrip;
+            $roadtrip->setVehicle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoadtrip(Roadtrip $roadtrip): self
+    {
+        if ($this->roadtrips->removeElement($roadtrip)) {
+            // set the owning side to null (unless already changed)
+            if ($roadtrip->getVehicle() === $this) {
+                $roadtrip->setVehicle(null);
+            }
+        }
+
+        return $this;
+    }
+}
