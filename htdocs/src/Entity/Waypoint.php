@@ -16,9 +16,6 @@ class Waypoint
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private ?string $title = null;
-
-    #[ORM\Column(type: 'string', length: 255)]
     private ?string $day = null;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -42,6 +39,9 @@ class Waypoint
     #[ORM\Column(type: 'integer')]
     private ?string $popularity = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $best_hours;
+
     #[ORM\Column(type: 'datetime')]
     private $created_at;
 
@@ -51,6 +51,10 @@ class Waypoint
     #[ORM\ManyToOne(targetEntity: Roadtrip::class, inversedBy: 'waypoints')]
     #[ORM\JoinColumn(nullable: false)]
     private $roadtrip;
+
+    #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'waypoints')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $city;
 
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
@@ -68,18 +72,6 @@ class Waypoint
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
     }
 
     public function getDay(): ?string
@@ -178,6 +170,18 @@ class Waypoint
         return $this;
     }
 
+    public function getBestHours(): ?string
+    {
+        return $this->best_hours;
+    }
+
+    public function setBestHours(?string $best_hours): self
+    {
+        $this->best_hours = $best_hours;
+
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
@@ -196,6 +200,18 @@ class Waypoint
     public function setRoadtrip(?Roadtrip $roadtrip): self
     {
         $this->roadtrip = $roadtrip;
+
+        return $this;
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }

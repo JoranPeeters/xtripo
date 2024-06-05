@@ -38,11 +38,15 @@ class RentalVehicle
     #[ORM\column(type: 'datetime')]
     private $dropoff_date;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $city;
+
     #[ORM\Column(type: 'datetime')]
     private $created_at;
 
     #[ORM\Column(type: 'datetime')]
     private $updated_at;
+
 
     #[ORM\OneToMany(mappedBy: 'rental_vehicle', targetEntity: Roadtrip::class)]
     private Collection $roadtrips;
@@ -150,6 +154,18 @@ class RentalVehicle
     public function setDropoffDate(\DateTimeInterface $dropoff_date): self
     {
         $this->dropoff_date = $dropoff_date;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }

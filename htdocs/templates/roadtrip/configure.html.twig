@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Configure Roadtrip{% endblock %}
+
+{% block body %}
+
+    <h1>{{ roadtrip.title ?? 'My roadtrip to ' ~ country.name }}</h1>
+    <p>Start Date: {{ roadtrip.startDate|date('Y-m-d') }}</p>
+    <p>End Date: {{ roadtrip.endDate|date('Y-m-d') }}</p>
+
+    {% for waypoint in waypoints %}
+        <h2>{{ waypoint.locationName }}</h2>
+        <strong>{{ waypoint.description }}</strong>
+
+        <p>{{ waypoint.advice }}</p>
+        <p>{{ waypoint.bestHours }}</p>
+        <p>{{ waypoint.distance }}</p>
+    {% endfor %}
+
+ 
+    <h2>Configure Waypoints</h2>
+    <a href="{{ path('app_roadtrip_view', {'id': roadtrip.id}) }}" class="btn btn-success">Save and View</a>
+
+{% endblock %}

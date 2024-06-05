@@ -21,28 +21,22 @@ class WaypointRepository extends ServiceEntityRepository
         parent::__construct($registry, Waypoint::class);
     }
 
-    //    /**
-    //     * @return Waypoint[] Returns an array of Waypoint objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('w')
-    //            ->andWhere('w.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('w.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function save(Waypoint $waypoint, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($waypoint);
 
-    //    public function findOneBySomeField($value): ?Waypoint
-    //    {
-    //        return $this->createQueryBuilder('w')
-    //            ->andWhere('w.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($flush) {
+            $this->flush();
+        }
+    }
+
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+    }
+
+    public function remove(Waypoint $waypoint): void
+    {
+        $this->getEntityManager()->remove($waypoint);
+    }
 }

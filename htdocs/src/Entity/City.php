@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\CountryRepository;
+use App\Repository\CityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Entity(repositoryClass: CountryRepository::class)]
-#[ORM\Table(name: 'country')]
+#[ORM\Entity(repositoryClass: CityRepository::class)]
+#[ORM\Table(name: 'city')]
 #[ORM\HasLifecycleCallbacks]
-class Country
+class City
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,7 +21,7 @@ class Country
     private ?string $name = null;
 
     #[ORM\Column(type: 'integer')]
-    private $popularity;
+    private ?int $popularity; 
 
     #[ORM\Column(type: 'datetime')]
     private $created_at;
@@ -29,16 +29,16 @@ class Country
     #[ORM\Column(type: 'datetime')]
     private $updated_at;
 
-    #[ORM\OneToMany(mappedBy: 'roadtrip', targetEntity: Roadtrip::class)]
-    private Collection $roadtrips;
+    #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'cities')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $country;
 
-    #[ORM\OneToMany(mappedBy: 'country', targetEntity: City::class)]
-    private Collection $cities;
+    #[ORM\OneToMany(mappedBy: 'city', targetEntity: Waypoint::class)]
+    private Collection $waypoints;
 
     public function __construct()
     {
-        $this->cities = new ArrayCollection();         
-        $this->roadtrips = new ArrayCollection();
+        $this->waypoints = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -93,57 +93,43 @@ class Country
         return $this->updated_at;
     }
 
-    public function getRoadtrips(): Collection
+    public function getCountry(): ?Country
     {
-        return $this->roadtrips;
+        return $this->country;
     }
 
-    public function addRoadtrip(Roadtrip $roadtrip): self
+    public function setCountry(?Country $country): self
     {
-        if (!$this->roadtrips->contains($roadtrip)) {
-            $this->roadtrips[] = $roadtrip;
-            $roadtrip->setCountry($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRoadtrip(Roadtrip $roadtrip): self
-    {
-        if ($this->roadtrips->removeElement($roadtrip)) {
-            // set the owning side to null (unless already changed)
-            if ($roadtrip->getCountry() === $this) {
-                $roadtrip->setCountry(null);
-            }
-        }
+        $this->country = $country;
 
         return $this;
     }
 
     /**
-     * @return Collection|City[]
+     * @return Collection|Waypoint[]
      */
-    public function getCities(): Collection
+
+    public function getWaypoints(): Collection
     {
-        return $this->cities;
+        return $this->waypoints;
     }
 
-    public function addCity(City $city): self
+    public function addWaypoint(Waypoint $waypoint): self
     {
-        if (!$this->cities->contains($city)) {
-            $this->cities[] = $city;
-            $city->setCountry($this);
+        if (!$this->waypoints->contains($waypoint)) {
+            $this->waypoints[] = $waypoint;
+            $waypoint->setCity($this);
         }
 
         return $this;
     }
 
-    public function removeCity(City $city): self
+    public function removeWaypoint(Waypoint $waypoint): self
     {
-        if ($this->cities->removeElement($city)) {
-            // set the owning side to null (unless already changed)
-            if ($city->getCountry() === $this) {
-                $city->setCountry(null);
+        if ($this->waypoints->removeElement($waypoint)) {
+            // Set the owning side to null (unless already changed)
+            if ($waypoint->getCity() === $this) {
+                $waypoint->setCity(null);
             }
         }
 

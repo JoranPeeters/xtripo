@@ -44,10 +44,10 @@ class Roadtrip
     private $rent_car;
 
     #[ORM\Column(type: 'date')]
-    private $startDate;
+    private $start_date;
 
     #[ORM\Column(type: 'date')]
-    private $endDate;
+    private $end_date;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'roadtrips')]
     #[ORM\JoinColumn(nullable: false)]
@@ -171,24 +171,24 @@ class Roadtrip
 
     public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->startDate;
+        return $this->start_date;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate): self
+    public function setStartDate(\DateTimeInterface $start_date): self
     {
-        $this->startDate = $startDate;
+        $this->start_date = $start_date;
 
         return $this;
     }
 
     public function getEndDate(): ?\DateTimeInterface
     {
-        return $this->endDate;
+        return $this->end_date;
     }
 
-    public function setEndDate(\DateTimeInterface $endDate): self
+    public function setEndDate(\DateTimeInterface $end_date): self
     {
-        $this->endDate = $endDate;
+        $this->end_date = $end_date;
 
         return $this;
     }

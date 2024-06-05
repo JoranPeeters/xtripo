@@ -13,6 +13,7 @@ use App\Repository\VehicleRepository;
 use App\Repository\CountryRepository;
 use App\Repository\RoadtripTypeRepository;
 use App\Service\OpenAI\OpenAIService;
+use App\Service\Database\WaypointService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use App\Entity\Roadtrip;
@@ -29,7 +30,8 @@ class PlannerController extends AbstractController
         private readonly RoadtripTypeRepository $roadtripTypeRepository,
         private readonly EntityManagerInterface $entityManager, 
         private readonly OpenAIService $openAIService,
-        private readonly Security $security
+        private readonly Security $security,
+        private readonly WaypointService $wavepointService,
 
         )
     {}
@@ -42,60 +44,30 @@ class PlannerController extends AbstractController
 
         $form->handleRequest($request);
 
-        // if ($form->isSubmitted() && !$form->isValid()) {
-        //     dd($form->getErrors(true, false)); // Dump form errors
-        // }
-
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Set the current user as the roadtrip creator
             $roadtrip->setUser($this->getUser());
 
-            // Link the entities based on the API response
-            //$this->linkEntities($roadtrip);
+            $country = $roadtrip->getCountry();
+            $country->setPopularity($country->getPopularity() + 1);
+            $this->countryRepository->save($country);
 
-            // Save and persist the roadtrip details
+
+            foreach ($roadtrip->getRoadtripTypes() as $type) {
+                $type->setPopularity($type->getPopularity() + 1);
+                $this->roadtripTypeRepository->save($type);
+            }
+
             $this->roadtripRepository->save($roadtrip, true);
 
-            dd($roadtrip); //API Call Can be made This is a stopping point
-            // Generate the roadtrip details via OpenAI API
-            $roadtripDetails = $this->openAIService->generateRoadtrip($roadtrip);
+            $roadtripWaypoints = $this->openAIService->generateRoadtrip($roadtrip);
+            $this->wavepointService->saveWaypoints($roadtripWaypoints, $roadtrip);
 
-            // Redirect user to the roadtrip view page
-            return $this->redirectToRoute('app_roadtrip_view', ['id' => $roadtrip->getId()]);
+            return $this->redirectToRoute('app_roadtrip_configure', ['id' => $roadtrip->getId()]);
         }
 
         return $this->render('planner/index.html.twig', [
             'form' => $form->createView(),
         ]);
     }
-
-
-    private function linkEntities(Roadtrip $roadtrip) : void 
-    {   
-        $vehicle = $this->vehicleRepository->findOneBy(['type' => $roadtrip->getVehicle()]);
-        $roadtrip->setVehicle($vehicle);
-
-        $country = $this->countryRepository->findOneBy(['name' => $roadtrip->getCountry()]);
-        $roadtrip->setCountry($country->getName());
-
-        $roadtripTypes = $this->roadtripTypeRepository->findOneBy(['name' => $roadtrip->getRoadtripTypes()]);
-        $roadtrip->addRoadtripType($roadtripTypes);
-    }
-
-    // // #[Route('/get-vehicle-models', name: 'get_vehicle_models', methods: ['GET'])]
-    // // public function getVehicleModels(Request $request): JsonResponse
-    // // {
-    // //     $vehicleType = $request->request->get('vehicle_type');
-    // //     $models = $this->entityManager->getRepository(Vehicle::class)->findBy(['type' => $vehicleType]);
-        
-    // //     $modelChoices = [];
-    // //     foreach ($models as $vehicle) {
-    // //         $modelChoices[$vehicle->getModel()] = $vehicle->getModel();
-    // //     }
-
-    // //     dd($modelChoices);
-    // //     return new JsonResponse($modelChoices);
-    // // }
 }
-

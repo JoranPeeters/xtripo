@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}View Roadtrip{% endblock %}
+
+{% block body %}
+    <h1>{{ roadtrip.title }}</h1>
+    <p>Start Date: {{ roadtrip.startDate|date('Y-m-d') }}</p>
+    <p>End Date: {{ roadtrip.endDate|date('Y-m-d') }}</p>
+    <p>Budget: {{ roadtrip.budget }}</p>
+
+    <h2>Waypoints</h2>
+    {% for waypoint in waypoints %}
+        <div>
+            <h3>{{ waypoint.locationName }}</h3>
+            <p>{{ waypoint.description }}</p>
+            <p><strong>Advice:</strong> {{ waypoint.advice }}</p>
+            <p><strong>Distance:</strong> {{ waypoint.distance }} km</p>
+        </div>
+    {% endfor %}
+
+    <a href="{{ path('app_roadtrip_edit', {'id': roadtrip.id}) }}" class="btn btn-primary">Edit</a>
+{% endblock %}
