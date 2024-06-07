@@ -20,7 +20,13 @@
 
   /*animations*/
   @import './animations/animations.css';
+
+  /* Google Maps */
+  @import './googleMaps/demo.css';
+
 }
+
+
 
 /* Custom styles */
 .display-none {

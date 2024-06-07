@@ -1,5 +1,4 @@
 <?php
-
 // src/Controller/RoadtripController.php
 
 namespace App\Controller;
@@ -14,6 +13,8 @@ use App\Entity\Roadtrip;
 use App\Form\RoadtripFormType;
 use App\Service\OpenAI\OpenAIService;
 use App\Service\Database\WaypointService;
+use App\Service\GoogleMaps\GoogleMapsService;
+use Psr\Log\LoggerInterface;
 
 class RoadtripController extends AbstractController
 {
@@ -21,18 +22,38 @@ class RoadtripController extends AbstractController
         private readonly RoadtripRepository $roadtripRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly OpenAIService $openAIService,
-        private readonly WaypointService $waypointService
+        private readonly WaypointService $waypointService,
+        private readonly GoogleMapsService $googleMapsService,
+        private readonly LoggerInterface $logger
     ) {}
 
     #[Route('/roadtrip/{id}/configure', name: 'app_roadtrip_configure')]
     public function configure(Roadtrip $roadtrip): Response
     {
-        return $this->render('roadtrip/configure.html.twig', [
-            'roadtrip' => $roadtrip,
-            'country' => $roadtrip->getCountry(),
-            'waypoints' => $roadtrip->getWaypoints()
-        ]);
+        try {
+            $waypoints = $roadtrip->getWaypoints();
+            if (empty($waypoints)) {
+                throw new \Exception('No waypoints found for this roadtrip.');
+            }
+
+            $this->logger->info('Retrieved waypoints', ['waypoints' => $waypoints]);
+
+            $routeData = $this->googleMapsService->makeRoute($waypoints->toArray());
+
+            $this->logger->info('Route data retrieved', ['routeData' => $routeData]);
+
+            return $this->render('roadtrip/configure.html.twig', [
+                'roadtrip' => $roadtrip,
+                'country' => $roadtrip->getCountry(),
+                'waypoints' => $roadtrip->getWaypoints(),
+                'encodedPolyline' => $routeData['routes'][0]['polyline']['encodedPolyline']
+            ]);
+        } catch (\Exception $e) {
+            $this->logger->error('Error in configure method', ['exception' => $e]);
+            return new Response('An error occurred: ' . $e->getMessage(), 500);
+        }
     }
+    
 
     #[Route('/roadtrip/{id}', name: 'app_roadtrip_view')]
     public function view(Roadtrip $roadtrip): Response

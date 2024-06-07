@@ -1,5 +1,4 @@
 <?php
-
 // src/Controller/PlannerController.php
 
 namespace App\Controller;
@@ -14,6 +13,7 @@ use App\Repository\CountryRepository;
 use App\Repository\RoadtripTypeRepository;
 use App\Service\OpenAI\OpenAIService;
 use App\Service\Database\WaypointService;
+use App\Service\GoogleMaps\GoogleMapsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use App\Entity\Roadtrip;
@@ -21,9 +21,7 @@ use App\Form\RoadtripFormType;
 
 class PlannerController extends AbstractController
 {
-
     public function __construct(
-
         private readonly RoadtripRepository $roadtripRepository,
         private readonly VehicleRepository $vehicleRepository,
         private readonly CountryRepository $countryRepository,
@@ -31,10 +29,10 @@ class PlannerController extends AbstractController
         private readonly EntityManagerInterface $entityManager, 
         private readonly OpenAIService $openAIService,
         private readonly Security $security,
-        private readonly WaypointService $wavepointService,
-
-        )
-    {}
+        private readonly WaypointService $waypointService,
+        private readonly GoogleMapsService $googleMapsService
+    ) {}
+    
 
     #[Route('/planner', name: 'app_planner')]
     public function index(Request $request): Response
@@ -52,7 +50,6 @@ class PlannerController extends AbstractController
             $country->setPopularity($country->getPopularity() + 1);
             $this->countryRepository->save($country);
 
-
             foreach ($roadtrip->getRoadtripTypes() as $type) {
                 $type->setPopularity($type->getPopularity() + 1);
                 $this->roadtripTypeRepository->save($type);
@@ -61,9 +58,12 @@ class PlannerController extends AbstractController
             $this->roadtripRepository->save($roadtrip, true);
 
             $roadtripWaypoints = $this->openAIService->generateRoadtrip($roadtrip);
-            $this->wavepointService->saveWaypoints($roadtripWaypoints, $roadtrip);
+            $this->waypointService->saveWaypoints($roadtripWaypoints, $roadtrip);
 
-            return $this->redirectToRoute('app_roadtrip_configure', ['id' => $roadtrip->getId()]);
+            // Redirect to the configure page with the roadtrip and waypoints
+            return $this->redirectToRoute('app_roadtrip_configure', [
+                'id' => $roadtrip->getId()
+            ]);
         }
 
         return $this->render('planner/index.html.twig', [

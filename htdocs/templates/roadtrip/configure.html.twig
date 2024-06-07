@@ -1,12 +1,14 @@
+{# templates/roadtrip/configure.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Configure Roadtrip{% endblock %}
 
 {% block body %}
-
     <h1>{{ roadtrip.title ?? 'My roadtrip to ' ~ country.name }}</h1>
     <p>Start Date: {{ roadtrip.startDate|date('Y-m-d') }}</p>
-    <p>End Date: {{ roadtrip.endDate|date('Y-m-d') }}</p>
+    <p>End Date: {{ roadtrip.endDate|date('Y-m-d') }}</p>   
+
+    <div id="roadtripMap" data-encoded-polyline="{{ encodedPolyline }}" class="mt-36 rounded-20" style="height: 500px; width: 100%;"></div>
 
     {% for waypoint in waypoints %}
         <h2>{{ waypoint.locationName }}</h2>
@@ -15,10 +17,15 @@
         <p>{{ waypoint.advice }}</p>
         <p>{{ waypoint.bestHours }}</p>
         <p>{{ waypoint.distance }}</p>
+        <p>{{ waypoint.latitude }}</p>
+        <p>{{ waypoint.longitude }}</p>
     {% endfor %}
 
- 
     <h2>Configure Waypoints</h2>
     <a href="{{ path('app_roadtrip_view', {'id': roadtrip.id}) }}" class="btn btn-success">Save and View</a>
+{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('roadtripConfigurator') }}
 {% endblock %}

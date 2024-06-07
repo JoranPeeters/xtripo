@@ -5,7 +5,7 @@
 {% block body %}
 
         <!-- Hero Block -->
-        <div class="relative w-full rounded-20 overflow-hidden -mt-10">
+        <div class="relative w-full rounded-20 overflow-hidden -mt-10 -z-20">
             <img src="{{ asset('build/images/explore-trips-hero.jpg')}}" alt="" class="object-cover w-full min-h-[30rem] lg:max-h-[40rem] rounded-20 transition-transform duration-1000 hover:scale-105">      
                 <div class="flex flex-col absolute inset-0 md:ml-20 md:w-3/5 px-4 lg:px-0 xl:px-0 xl:w-1/2 2xl:px-0 lg:w-3/5 lg:ml-20xl 2xl:w-[40rem] justify-center text-neutral gap-8 z-[1] pointer-events-auto">
                     <h1>{{ 'explore_trips.hero.title'|trans }}</h1> 
@@ -16,7 +16,7 @@
         </div>
 
         <!-- Search Block -->
-        <div class="flex relative justify-center content-center items-center text-primary bg-[rgba(229,231,235,0.98)] dark:bg-[rgba(18,18,18,0.9)] rounded-20 shadow-xl w-full md:w-auto mt-8 lg:-mt-24 z-10">
+        <div class="flex relative justify-center content-center items-center text-primary bg-[rgba(229,231,235,0.98)] dark:bg-[rgba(18,18,18,0.9)] py-2 rounded-20 shadow-xl mx-auto w-full sm:w-full xl:w-4/6 2xl:w-5/12 mt-8 lg:-mt-24 z-10">
             <div class="flex flex-col items-start px-6 py-4 lg:px-8 lg:py-8 gap-2 md:gap-4">
                 <div class="flex items-start md:items-end flex-col md:flex-row content-center flex-wrap justify-between md:justify-center gap-8 2xl:gap-16 pb-6">
                     <div class="flex items-center gap-2">
