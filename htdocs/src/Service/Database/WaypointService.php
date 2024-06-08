@@ -7,6 +7,7 @@ use App\Entity\City;
 use App\Entity\Roadtrip;
 use App\Repository\WaypointRepository;
 use App\Repository\CityRepository;
+use App\Service\OpenAI\OpenAIService;
 
 class WaypointService
 {
@@ -14,6 +15,7 @@ class WaypointService
     public function __construct(
         private readonly WaypointRepository $waypointRepository,
         private readonly CityRepository $cityRepository,
+        private readonly OpenAIService $openAIService
     ) {
     }
 
@@ -59,5 +61,11 @@ class WaypointService
 
         $this->waypointRepository->flush();
         $this->cityRepository->flush();
+    }
+
+    public function generateAndSaveWaypoints(Roadtrip $roadtrip): void
+    {
+        $roadtripWaypoints = $this->openAIService->generateRoadtrip($roadtrip);
+        $this->saveWaypoints($roadtripWaypoints, $roadtrip);
     }
 }

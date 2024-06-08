@@ -12,12 +12,14 @@ use App\Repository\VehicleRepository;
 use App\Repository\CountryRepository;
 use App\Repository\RoadtripTypeRepository;
 use App\Service\OpenAI\OpenAIService;
+use App\Service\Database\RoadtripService;
 use App\Service\Database\WaypointService;
 use App\Service\GoogleMaps\GoogleMapsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use App\Entity\Roadtrip;
 use App\Form\RoadtripFormType;
+
 
 class PlannerController extends AbstractController
 {
@@ -30,7 +32,8 @@ class PlannerController extends AbstractController
         private readonly OpenAIService $openAIService,
         private readonly Security $security,
         private readonly WaypointService $waypointService,
-        private readonly GoogleMapsService $googleMapsService
+        private readonly GoogleMapsService $googleMapsService,
+        private readonly RoadtripService $roadtripService
     ) {}
     
 
@@ -39,26 +42,18 @@ class PlannerController extends AbstractController
     {
         $roadtrip = new Roadtrip();
         $form = $this->createForm(RoadtripFormType::class, $roadtrip);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // Set the user and save the roadtrip
             $roadtrip->setUser($this->getUser());
 
-            $country = $roadtrip->getCountry();
-            $country->setPopularity($country->getPopularity() + 1);
-            $this->countryRepository->save($country);
+            // Save the roadtrip and update the popularity of the country and roadtrip types
+            $this->roadtripService->saveRoadtripAndUpdatePopularity($roadtrip);
 
-            foreach ($roadtrip->getRoadtripTypes() as $type) {
-                $type->setPopularity($type->getPopularity() + 1);
-                $this->roadtripTypeRepository->save($type);
-            }
-
-            $this->roadtripRepository->save($roadtrip, true);
-
-            $roadtripWaypoints = $this->openAIService->generateRoadtrip($roadtrip);
-            $this->waypointService->saveWaypoints($roadtripWaypoints, $roadtrip);
+            // Generate and save the waypoints
+            $this->waypointService->generateAndSaveWaypoints($roadtrip);
 
             // Redirect to the configure page with the roadtrip and waypoints
             return $this->redirectToRoute('app_roadtrip_configure', [

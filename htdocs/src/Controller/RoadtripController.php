@@ -36,21 +36,19 @@ class RoadtripController extends AbstractController
                 throw new \Exception('No waypoints found for this roadtrip.');
             }
 
-            $this->logger->info('Retrieved waypoints', ['waypoints' => $waypoints]);
-
-            $routeData = $this->googleMapsService->makeRoute($waypoints->toArray());
-
-            $this->logger->info('Route data retrieved', ['routeData' => $routeData]);
-
             return $this->render('roadtrip/configure.html.twig', [
                 'roadtrip' => $roadtrip,
                 'country' => $roadtrip->getCountry(),
                 'waypoints' => $roadtrip->getWaypoints(),
-                'encodedPolyline' => $routeData['routes'][0]['polyline']['encodedPolyline']
             ]);
+
         } catch (\Exception $e) {
             $this->logger->error('Error in configure method', ['exception' => $e]);
             return new Response('An error occurred: ' . $e->getMessage(), 500);
+            // // Render a different template or return a custom response
+            // return $this->render('roadtrip/error.html.twig', [
+            //     'errorMessage' => 'An error occurred while configuring the roadtrip: ' . $e->getMessage()
+            // ]);
         }
     }
     

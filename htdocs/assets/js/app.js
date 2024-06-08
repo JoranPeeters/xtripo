@@ -6,13 +6,14 @@
  */
 import '.././styles/app.css';
 
-import './mode/themeSwitcher.js';
-
 //import './js/vehicle/vehicle-models.js';
 
 /* Google Maps */
 import './googleMaps/demo';
 import './googleMaps/roadtripConfigurator';
+
+import './mode/themeSwitcher.js';
+import './datepicker/datepicker.js';
 
 console.log('app.js loaded! 🎉');
 

@@ -14,8 +14,10 @@ class GoogleMapsService
         $this->httpClient = $httpClient;
     }
 
+    // Google Make Route API, used for testing and experimenting
     public function makeRoute(array $waypoints)
     {
+        // Convert our waypoints to Google Maps format
         $googlemapsWaypoints = $this->getGooglemapsWaypoints($waypoints);
 
         // For demonstration purposes, we will use only the first few waypoints
@@ -27,6 +29,7 @@ class GoogleMapsService
         $destination = $googlemapsWaypoints[count($googlemapsWaypoints) - 1]['location'];
         $waypointsForRoute = array_slice($googlemapsWaypoints, 1, count($googlemapsWaypoints) - 2);
 
+        // Send the route request to Google Maps
         return $this->sendRouteRequest($origin, $destination, $waypointsForRoute);
     }
 
@@ -36,7 +39,7 @@ class GoogleMapsService
         
         // Set departure time to tomorrow
         $departureTime = (new \DateTime('tomorrow'))->format(\DateTime::ATOM);
-        
+
         $requestBody = [
             'origin' => [
                 'location' => [
@@ -67,11 +70,11 @@ class GoogleMapsService
             'travelMode' => 'DRIVE',
             'routingPreference' => 'TRAFFIC_AWARE',
             'departureTime' => $departureTime,
-            'computeAlternativeRoutes' => false,
+            'computeAlternativeRoutes' => true,
             'routeModifiers' => [
                 'avoidTolls' => false,
                 'avoidHighways' => false,
-                'avoidFerries' => false
+                'avoidFerries' => false,
             ],
             'languageCode' => 'en-US',
             'units' => 'IMPERIAL'

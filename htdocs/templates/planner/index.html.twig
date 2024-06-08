@@ -1,22 +1,99 @@
 {# templates/roadtrip/planner.html.twig #}
-
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Plan Your Roadtrip</h1>
-    {{ form_start(form, { 'attr': { 'action': path('app_planner'), 'method': 'POST' } }) }}
-        {{ form_errors(form) }}
-        {{ form_row(form.country) }}
-        {{ form_row(form.travelers) }}
-        {{ form_row(form.start_date) }}
-        {{ form_row(form.end_date) }}
-        {{ form_row(form.rent_car) }}
-        {{ form_row(form.vehicle) }}
-        {{ form_row(form.cost_preferences) }}
-        {{ form_row(form.distance) }}
-        {{ form_row(form.roadtrip_types) }}
-        {{ form_row(form.save) }}
-    {{ form_end(form) }}
 
-    <script src="{{ asset('path/to/your/javascript/file.js') }}"></script>
+<style>
+    .flatpickr-calendar {
+        background-color: #fff;
+        border: 1px solid #D1D5DB;
+        border-radius: 8px;
+        color: #111827; /* Text color */
+    }
+
+    .flatpickr-day.today {
+        background-color: #FFEDD5;
+    }
+
+    .flatpickr-day.selected {
+        background-color: #EF4444;
+        color: #fff;
+    }
+</style>
+
+<h1>Plan Your Roadtrip</h1>
+{{ form_start(form, { 'attr': { 'class': 'space-y-4' } }) }}
+    <div class="flex flex-wrap -mx-2">
+        <div class="w-full md:w-1/2 px-2 mb-4 form-select-container">
+            {{ form_label(form.country, null, {'label_attr': {'class': 'block text-sm font-medium text-primary'}}) }}
+            {{ form_widget(form.country, {'attr': {'class': 'form-select custom-select'}}) }}
+            <i class="fa-solid fa-angle-down input-icon px-5 pt-5"></i>
+            {{ form_errors(form.country) }}
+        </div>
+        <div class="w-full md:w-1/2 px-2 mb-4">
+            {{ form_label(form.travelers, null, {'label_attr': {'class': 'block text-sm font-medium text-primary'}}) }}
+            {{ form_widget(form.travelers, {'attr': {'class': 'form-input'}}) }}
+            {{ form_errors(form.travelers) }}
+        </div>
+        <div class="w-full md:w-1/2 px-2 mb-4 form-date-container">
+            {{ form_label(form.start_date, null, {'label_attr': {'class': 'block text-sm font-medium text-primary'}}) }}
+            {{ form_widget(form.start_date, {'attr': {'class': 'form-input'}}) }}
+            <i class="fa-solid fa-calendar fa-lg input-icon px-5 pt-5 date-picker"></i>
+            {{ form_errors(form.start_date) }}
+        </div>
+        <div class="w-full md:w-1/2 px-2 mb-4 form-date-container">
+            {{ form_label(form.end_date, null, {'label_attr': {'class': 'block text-sm font-medium text-primary'}}) }}
+            {{ form_widget(form.end_date, {'attr': {'class': 'form-input'}}) }}
+            <i class="fa-solid fa-calendar fa-lg input-icon px-5 pt-5 date-picker"></i>
+            {{ form_errors(form.end_date) }}
+        </div>
+        <div class="w-full px-2 mb-4">
+            {{ form_label(form.rent_car, null, {'label_attr': {'class': 'block text-sm font-medium text-primary'}}) }}
+            {{ form_widget(form.rent_car, {'attr': {'class': 'form-select'}}) }}
+            {{ form_errors(form.rent_car) }}
+        </div>
+        <div class="w-full md:w-1/2 px-2 mb-4 form-select-container">
+            {{ form_label(form.vehicle, null, {'label_attr': {'class': 'block text-sm font-medium text-primary'}}) }}
+            {{ form_widget(form.vehicle, {'attr': {'class': 'form-select custom-select'}}) }}
+            <i class="fa-solid fa-angle-down input-icon px-5 pt-5"></i>
+            {{ form_errors(form.vehicle) }}
+        </div>
+        <div class="w-full md:w-1/2 px-2 mb-4 form-select-container">
+            {{ form_label(form.cost_preferences, null, {'label_attr': {'class': 'block text-sm font-medium text-primary'}}) }}
+            {{ form_widget(form.cost_preferences, {'attr': {'class': 'form-select text-primary'}}) }}
+            <i class="fa-solid fa-angle-down input-icon px-5 pt-5"></i>
+            {{ form_errors(form.cost_preferences) }}
+        </div>
+        <div class="w-full md:w-1/2 px-2 mb-4 form-select-container">
+            {{ form_label(form.distance, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.distance, {'attr': {'class': 'form-select text-primary'}}) }}
+            <i class="fa-solid fa-angle-down input-icon px-5 pt-5"></i>
+            {{ form_errors(form.distance) }}
+        </div>
+        <div class="w-full px-2 mb-4">
+            {{ form_label(form.roadtrip_types, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.roadtrip_types, {'attr': {'class': 'form-select text-primary'}}) }}
+            {{ form_errors(form.roadtrip_types) }}
+        </div>
+        <div class="w-full px-2 mb-4">
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+        </div>
+    </div>
+{{ form_end(form) }}
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr(".date-picker", {
+            dateFormat: "d/m/Y", // Customize the date format as needed
+            locale: {
+                firstDayOfWeek: 1 // Start the week on Monday
+            },
+            altInput: true,
+            altFormat: "F j, Y",
+        });
+    });
+</script>
 {% endblock %}
+
+

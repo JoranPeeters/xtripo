@@ -1,5 +1,31 @@
 /* Forms */
+.form-input {
+    @apply px-4 py-2 pr-10 rounded-8 w-full bg-transparent border border-primary focus:outline-none focus:border-orange focus:ring-1 focus:ring-brand-light-orange;
+}
 
-.form-input{
-    @apply px-4 py-2 rounded-8 w-full bg-transparent border border-primary focus:outline-none focus:border-orange focus:ring-1 focus:ring-brand-light-orange;
+.form-select {
+    @apply px-4 py-2 pr-10 rounded-8 w-full bg-transparent border border-primary focus:outline-none focus:border-orange focus:ring-1 focus:ring-brand-light-orange appearance-none;
+}
+
+.input-icon {
+    @apply absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none;
+}
+
+.form-select-container,
+.form-date-container {
+    position: relative;
+}
+
+.custom-select option {
+    @apply text-black-neutral;
+}
+
+/* Hide default date picker icon but keep it functional */
+input[type="date"].form-input::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
 }
