@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Roadtrip;
 use App\Entity\Country;
 use App\Entity\Vehicle;
+use App\Entity\City;
 use App\Entity\RoadtripType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -28,23 +29,54 @@ class RoadtripFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('starting_point', EntityType::class, [
+                'class' => City::class,
+                'choice_label' => function (City $city) {
+                    return $city->getCountry()->getName() . ' - ' . $city->getName();
+                },
+                'group_by' => function (City $city) {
+                    return $city->getCountry()->getName();
+                },
+                'label' => 'Starting Point',
+                'required' => true,
+                'placeholder' => 'Choose your starting area',
+            ])
+
             ->add('country', EntityType::class, [
                 'class' => Country::class,
                 'choice_label' => 'name',
-                'label' => 'Country',
+                'label' => 'Destination Country',
                 'required' => true,
+                'placeholder' => 'Which country will you explore?',
             ])
+
             ->add('travelers', IntegerType::class, [
-                'label' => 'Number of Travelers',
+                'label' => 'Travel Crew',
+                'attr' => ['placeholder' => 'How many are joining?'],
             ])
+
             ->add('start_date', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Start Date',
+                'attr' => ['placeholder' => 'When does the fun start?'],
             ])
+
             ->add('end_date', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'End Date',
+                'attr' => ['placeholder' => 'When does the fun end?'],
             ])
+
+            ->add('start_from_home', ChoiceType::class, [
+                'choices' => [
+                    'Yes' => true,
+                    'No' => false,
+                ],
+                'expanded' => true,
+                'multiple' => false,
+                'label' => 'Do you want to start from home?',
+            ])
+
             ->add('rent_car', ChoiceType::class, [
                 'choices' => [
                     'Yes' => true,
@@ -52,22 +84,27 @@ class RoadtripFormType extends AbstractType
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'label' => 'Do you want to rent a car?',
+                'label' => 'Need a Rental Car?',
             ])
+
             ->add('vehicle', EntityType::class, [
                 'class' => Vehicle::class,
                 'choice_label' => 'vehicle_type',
-                'label' => 'Vehicle',
+                'label' => 'Select Your Ride',
+                'placeholder' => 'Choose your vehicle',
                 'required' => false,
             ])
+
             ->add('cost_preferences', ChoiceType::class, [
                 'choices' => [
                     'Budget (Economy)' => Roadtrip::COST_LOW,
                     'Mid-range (Comfort)' => Roadtrip::COST_MODERATE,
                     'Luxury (Premium)' => Roadtrip::COST_HIGH,
                 ],
-                'label' => 'Budget',
+                'label' => 'Trip Budget',
+                'placeholder' => 'What\'s your spending style?',
             ])
+
             ->add('distance', ChoiceType::class, [
                 'choices' => [
                     'Short (0-100 km/day)' => Roadtrip::DISTANCE_SHORT,
@@ -75,7 +112,9 @@ class RoadtripFormType extends AbstractType
                     'Long (300+ km/day)' => Roadtrip::DISTANCE_LONG,
                 ],
                 'label' => 'Distance',
+                'placeholder' => 'How far will you travel each day?',
             ])
+
             ->add('roadtrip_types', EntityType::class, [
                 'class' => RoadtripType::class,
                 'choice_label' => 'name',
@@ -83,8 +122,9 @@ class RoadtripFormType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
+
             ->add('save', SubmitType::class, [
-                'label' => 'Generate Roadtrip',
+                'label' => 'Start the Adventure!',
             ]);
     }
 
@@ -93,33 +133,5 @@ class RoadtripFormType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Roadtrip::class,
         ]);
-    }
-
-    private function getFuelChoices(): array
-    {
-        $vehicles = $this->entityManager->getRepository(Vehicle::class)->findAll();
-        $fuelChoices = [];
-
-        foreach ($vehicles as $vehicle) {
-            foreach ($vehicle->getFuelTypes() as $fuelType) {
-                $fuelChoices[$fuelType] = $fuelType;
-            }
-        }
-
-        return $fuelChoices;
-    }
-
-    private function getModelChoices(): array
-    {
-        $vehicles = $this->entityManager->getRepository(Vehicle::class)->findAll();
-        $modelChoices = [];
-
-        foreach ($vehicles as $vehicle) {
-            foreach ($vehicle->getModels() as $model) {
-                $modelChoices[$model] = $model;
-            }
-        }
-
-        return $modelChoices;
     }
 }

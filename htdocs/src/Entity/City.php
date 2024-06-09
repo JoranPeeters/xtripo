@@ -36,6 +36,9 @@ class City
     #[ORM\OneToMany(mappedBy: 'city', targetEntity: Waypoint::class)]
     private Collection $waypoints;
 
+    #[ORM\OneToMany(targetEntity: Roadtrip::class, mappedBy: 'starting_point')]
+    private $roadtrips;
+
     public function __construct()
     {
         $this->waypoints = new ArrayCollection();
@@ -130,6 +133,37 @@ class City
             // Set the owning side to null (unless already changed)
             if ($waypoint->getCity() === $this) {
                 $waypoint->setCity(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Roadtrip[]
+     */
+
+    public function getRoadtrips(): Collection
+    {
+        return $this->roadtrips;
+    }
+
+    public function addRoadtrip(Roadtrip $roadtrip): self
+    {
+        if (!$this->roadtrips->contains($roadtrip)) {
+            $this->roadtrips[] = $roadtrip;
+            $roadtrip->setStartingPoint($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoadtrip(Roadtrip $roadtrip): self
+    {
+        if ($this->roadtrips->removeElement($roadtrip)) {
+            // Set the owning side to null (unless already changed)
+            if ($roadtrip->getStartingPoint() === $this) {
+                $roadtrip->setStartingPoint(null);
             }
         }
 

@@ -39,4 +39,14 @@ class CityRepository extends ServiceEntityRepository
     {
         $this->getEntityManager()->remove($city);
     }
+
+    public function findCitiesGroupedByCountry()
+    {
+        return $this->createQueryBuilder('city')
+            ->join('city.country', 'country')
+            ->addSelect('country')
+            ->orderBy('country.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

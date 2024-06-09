@@ -1,26 +1,47 @@
 /* Forms */
 .form-input {
-    @apply px-4 py-2 pr-10 rounded-8 w-full bg-transparent border border-primary focus:outline-none focus:border-orange focus:ring-1 focus:ring-brand-light-orange;
+    @apply appearance-none text-lg px-4 py-3 pr-10 rounded-8 w-full bg-transparent focus:outline-none focus:border-orange focus:ring-2 focus:ring-brand-orange shadow-md dark:bg-broken-white text-grey-neutral;
 }
 
 .form-select {
-    @apply px-4 py-2 pr-10 rounded-8 w-full bg-transparent border border-primary focus:outline-none focus:border-orange focus:ring-1 focus:ring-brand-light-orange appearance-none;
+    @apply appearance-none text-lg px-4 py-3 pr-10 rounded-8 w-full bg-transparent focus:outline-none focus:border-orange focus:ring-2 focus:ring-brand-orange shadow-md dark:bg-broken-white text-grey-neutral;
+}
+
+.form-radio {
+    @apply h-4 w-4 text-primary focus:ring-brand-light-green focus:ring-1;
 }
 
 .input-icon {
-    @apply absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none;
+    @apply absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-black-neutral;
 }
 
-.form-select-container,
+input[type="radio"] {
+    @apply h-5 w-5;
+}
+
+.form-radio:checked {
+    outline-color: bg-light-green;
+    background-color: bg-light-green;
+
+    animation: outline-checked;
+    animation-duration: 0.1s;
+    animation-iteration-count: 4;
+    animation-direction: alternate;
+    animation-timing-function: linear;
+}
+
 .form-date-container {
     position: relative;
 }
 
-.custom-select option {
+.form-select option {
     @apply text-black-neutral;
 }
 
-/* Hide default date picker icon but keep it functional */
+.form-select-container {
+    position: relative;
+}
+
 input[type="date"].form-input::-webkit-calendar-picker-indicator {
     opacity: 0;
     position: absolute;
@@ -29,3 +50,16 @@ input[type="date"].form-input::-webkit-calendar-picker-indicator {
     height: 100%;
     cursor: pointer;
 }
+
+input[type="checkbox"].hidden {
+    display: none;
+}
+
+
+/* Ensure checked state is styled */
+input[type="checkbox"]:checked + label {
+    @apply bg-green text-invert border-green dark:bg-orange dark:border-orange hover:bg-light-green dark:hover:bg-light-orange;
+}
+
+
+

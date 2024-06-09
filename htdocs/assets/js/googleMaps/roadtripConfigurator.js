@@ -41,6 +41,11 @@ function initMap() {
         endSelect.selectedIndex = endSelect.options.length - 1;
     }
 
+    // Select all waypoints in between
+    for (let i = 0; i < waypointsSelect.options.length; i++) {
+        waypointsSelect.options[i].selected = true;
+    }
+
     // Get the first waypoint's coordinates to set the map center
     const firstWaypointValue = startSelect.options[startSelect.selectedIndex].value;
     const [firstWaypointLat, firstWaypointLng] = firstWaypointValue.split(',').map(Number);

@@ -22,8 +22,8 @@
             <b>Waypoints:</b> <br />
             <i>(Ctrl+Click or Cmd+Click for multiple selection)</i> <br />
             <select multiple id="waypoints">
-                {% for waypoint in waypoints %} 
-                    {%if not loop.first and not loop.last %}
+                {% for waypoint in waypoints %}
+                    {% if not loop.first and not loop.last %}
                         <option value="{{ waypoint.latitude }},{{ waypoint.longitude }}" data-title="{{ waypoint.locationName }}">{{ waypoint.locationName }}</option>
                     {% endif %}
                 {% endfor %}

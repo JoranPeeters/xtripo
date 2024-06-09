@@ -13,7 +13,6 @@ import './googleMaps/demo';
 import './googleMaps/roadtripConfigurator';
 
 import './mode/themeSwitcher.js';
-import './datepicker/datepicker.js';
 
 console.log('app.js loaded! 🎉');
 

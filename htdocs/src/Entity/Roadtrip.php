@@ -43,6 +43,9 @@ class Roadtrip
     #[ORM\Column(type: 'boolean')]
     private $rent_car;
 
+    #[ORM\Column(type: 'boolean')]
+    private $start_from_home;
+
     #[ORM\Column(type: 'date')]
     private $start_date;
 
@@ -77,6 +80,10 @@ class Roadtrip
     
     #[ORM\OneToMany(mappedBy: 'roadtrip', targetEntity: Accommodation::class)]
     private $accommodations;
+
+    #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'roadtrips')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $starting_point;
 
     public function __construct()
     {
@@ -165,6 +172,18 @@ class Roadtrip
     public function setRentCar(bool $rent_car): self
     {
         $this->rent_car = $rent_car;
+
+        return $this;
+    }
+
+    public function getStartFromHome(): ?bool
+    {
+        return $this->start_from_home;
+    }
+
+    public function setStartFromHome(bool $start_from_home): self
+    {
+        $this->start_from_home = $start_from_home;
 
         return $this;
     }
@@ -365,4 +384,15 @@ class Roadtrip
         return $this;
     }
 
+    public function getStartingPoint(): ?City
+    {
+        return $this->starting_point;
+    }
+
+    public function setStartingPoint(?City $starting_point): self
+    {
+        $this->starting_point = $starting_point;
+
+        return $this;
+    }
 }

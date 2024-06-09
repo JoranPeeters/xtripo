@@ -12,6 +12,7 @@ module.exports = {
       extend: {
         opacity: ['group-hover'],
         scale: ['group-hover'],
+        placeholderColor: ['focus'],
       },
     },
     extend: {
@@ -85,6 +86,9 @@ module.exports = {
         success: 'var(--color-state-success)',
         error: 'var(--color-state-error)',
       },
+      placeholderColor: {
+        grey: 'var(--color-grey-400)',
+      },
     },
     textColor: {
       primary: 'var(--text-primary)',
@@ -100,6 +104,7 @@ module.exports = {
       'dark-orange': 'var(--text-dark-orange)',
       'light-orange': 'var(--text-light-orange)',
       grey: 'var(--text-grey)',
+      'light-grey': 'var(--text-light-grey)',
       transparent: 'var(--text-transparent)',
       success: 'var(--color-state-success)',
       error: 'var(--color-state-error)',
@@ -118,6 +123,7 @@ module.exports = {
       white: 'var(--surface-neutral-white)',
       grey: 'var(--surface-grey)',
       'light-grey': 'var(--surface-light-grey)',
+      'broken-white': 'var(--surface-broken-white)',
       transparent: 'var(--surface-transparent)',
     },
     borderColor: {
