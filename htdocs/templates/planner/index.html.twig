@@ -15,13 +15,13 @@
 
                 <!-- Picture Placeholder -->
                 <div class="w-full md:w-2/5">
-                    <img src="{{ asset('build/images/hero-image.png')}}" alt="Roadtrip Image" class="rounded-20 w-full h-full object-cover">
+                    <img src="{{ asset('build/images/mountains.png')}}" alt="Roadtrip Image" class="rounded-20 w-full h-full object-cover">
                 </div>
 
-                <div class="w-full md:w-3/5 flex flex-col content-end gap-6">
+                <div class="w-full md:w-3/5 flex flex-col content-end xl:px-20 gap-6">
 
-                    <div class="w-full flex flex-col md:flex-row gap-6">
-                        <div class="w-full md:w-1/2">
+                    <div class="w-full flex flex-col lg:flex-row gap-6">
+                        <div class="w-full sm:w-1/2 mb-10">
                             <label class="inline-block text-xl font-normal text-primary mb-3">
                                 <i class="fa-solid fa-location-dot fa-lg mr-2"></i> Starting Point
                             </label>
@@ -32,7 +32,7 @@
                             {{ form_errors(form.starting_point) }}
                         </div>
 
-                        <div class="w-full md:w-1/2">
+                        <div class="w-full sm:w-1/2">
                             <label class="inline-block text-xl font-normal text-primary mb-3">
                                 <i class="fa-solid fa-map-location-dot fa-lg mr-2"></i> Destination Country
                             </label>
@@ -108,8 +108,8 @@
                         </div>
                     </div>
 
-                    <div class="w-full flex flex-col md:flex-row gap-6">
-                        <div class="w-full md:w-1/2">
+                    <div class="w-full flex flex-col lg:flex-row gap-6">
+                        <div class="w-full sm:w-1/2">
                             <label class="inline-block text-xl font-normal text-primary mb-3">
                                 <i class="fa-solid fa-car-side fa-lg mr-2"></i> Select Your Ride
                             </label>
@@ -120,7 +120,7 @@
                             {{ form_errors(form.vehicle) }}
                         </div>
 
-                        <div class="w-full md:w-1/2">
+                        <div class="w-full sm:w-1/2">
                             <label class="inline-block text-xl font-normal text-primary mb-3">
                                 <i class="fa-solid fa-piggy-bank fa-lg mr-2"></i> Trip Budget
                             </label>
