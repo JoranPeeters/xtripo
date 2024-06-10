@@ -15,6 +15,11 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 class RoadtripFormType extends AbstractType
@@ -40,6 +45,9 @@ class RoadtripFormType extends AbstractType
                 'label' => 'Starting Point',
                 'required' => true,
                 'placeholder' => 'Choose your starting area',
+                'constraints' => [
+                    new NotBlank(['message' => 'Starting point is required']),
+                ],
             ])
 
             ->add('country', EntityType::class, [
@@ -48,23 +56,37 @@ class RoadtripFormType extends AbstractType
                 'label' => 'Destination Country',
                 'required' => true,
                 'placeholder' => 'Which country will you explore?',
+                'constraints' => [
+                    new NotBlank(['message' => 'Destination country is required']),
+                ],
             ])
 
             ->add('travelers', IntegerType::class, [
                 'label' => 'Travel Crew',
                 'attr' => ['placeholder' => 'How many are joining?'],
+                'constraints' => [
+                    new NotBlank(['message' => 'Number of travelers is required']),
+                    new GreaterThanOrEqual(['value' => 1, 'message' => 'The number of travelers must be at least 1']),
+                ],
             ])
 
             ->add('start_date', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Start Date',
                 'attr' => ['placeholder' => 'When does the fun start?'],
+                'constraints' => [
+                    new NotBlank(['message' => 'Start date is required']),
+                ],
             ])
 
             ->add('end_date', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'End Date',
                 'attr' => ['placeholder' => 'When does the fun end?'],
+                'constraints' => [
+                    new NotBlank(['message' => 'End date is required']),
+                    new Callback([$this, 'validateDates']),
+                ],
             ])
 
             ->add('start_from_home', ChoiceType::class, [
@@ -128,6 +150,30 @@ class RoadtripFormType extends AbstractType
             ]);
     }
 
+    public function validateDates($object, ExecutionContextInterface $context): void
+    {
+        $formData = $context->getRoot()->getData();
+        $startDate = $formData->getStartDate();
+        $endDate = $formData->getEndDate();
+        
+        if ($startDate && $endDate) {
+            $now = new \DateTime();
+            $now->setTime(0, 0, 0);
+            if ($startDate < $now || $endDate < $now) {
+                $context->buildViolation('The date cannot be in the past.')
+                    ->atPath('start_date')
+                    ->addViolation();
+            }
+
+            $diff = $endDate->diff($startDate)->days;
+            if ($diff > 7) {
+                $context->buildViolation('The road trip cannot be longer than 7 days.')
+                    ->atPath('end_date')
+                    ->addViolation();
+            }
+        }
+    }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -135,3 +181,4 @@ class RoadtripFormType extends AbstractType
         ]);
     }
 }
+

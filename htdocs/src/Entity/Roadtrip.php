@@ -75,8 +75,9 @@ class Roadtrip
     #[ORM\JoinTable(name: 'roadtrip_roadtrip_type')]
     private $roadtrip_types;
 
-    #[ORM\OneToMany(mappedBy: 'roadtrip', targetEntity: Activity::class)]
-    private $activities;
+    #[ORM\ManyToMany(targetEntity: Activity::class, inversedBy: 'roadtrips')]
+    #[ORM\JoinTable(name: 'roadtrip_activities')]
+    private Collection $activities;
     
     #[ORM\OneToMany(mappedBy: 'roadtrip', targetEntity: Accommodation::class)]
     private $accommodations;
@@ -335,8 +336,8 @@ class Roadtrip
     public function addActivity(Activity $activity): self
     {
         if (!$this->activities->contains($activity)) {
-            $this->activities[] = $activity;
-            $activity->setRoadtrip($this);
+            $this->activities->add($activity);
+            $activity->addRoadtrip($this);
         }
 
         return $this;
@@ -345,10 +346,7 @@ class Roadtrip
     public function removeActivity(Activity $activity): self
     {
         if ($this->activities->removeElement($activity)) {
-            // set the owning side to null (unless already changed)
-            if ($activity->getRoadtrip() === $this) {
-                $activity->setRoadtrip(null);
-            }
+            $activity->removeRoadtrip($this);
         }
 
         return $this;

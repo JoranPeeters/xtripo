@@ -15,13 +15,13 @@
 
                 <!-- Picture Placeholder -->
                 <div class="w-full md:w-2/5">
-                    <img src="{{ asset('build/images/mountains.png')}}" alt="Roadtrip Image" class="rounded-20 w-full h-full object-cover">
+                    <img src="{{ asset('build/images/mountains-view.jpg')}}" alt="Roadtrip Image" class="rounded-20 w-full h-full object-cover hidden md:flex">
                 </div>
 
-                <div class="w-full md:w-3/5 flex flex-col content-end xl:px-20 gap-6">
+                <div class="w-full md:w-3/5 flex flex-col content-end 2xl:px-24 2xl:gap-10 gap-6">
 
-                    <div class="w-full flex flex-col lg:flex-row gap-6">
-                        <div class="w-full sm:w-1/2 mb-10">
+                    <div class="w-full flex flex-col lg:flex-row gap-6 2xl:gap-10 mb-8">
+                        <div class="w-full lg:w-1/2">
                             <label class="inline-block text-xl font-normal text-primary mb-3">
                                 <i class="fa-solid fa-location-dot fa-lg mr-2"></i> Starting Point
                             </label>
@@ -32,7 +32,7 @@
                             {{ form_errors(form.starting_point) }}
                         </div>
 
-                        <div class="w-full sm:w-1/2">
+                        <div class="w-full lg:w-1/2">
                             <label class="inline-block text-xl font-normal text-primary mb-3">
                                 <i class="fa-solid fa-map-location-dot fa-lg mr-2"></i> Destination Country
                             </label>
@@ -44,15 +44,19 @@
                         </div>
                     </div>
 
-                    <div class="w-full">
+                    <div class="w-full mb-8">
                         <label class="inline-block text-xl font-normal text-primary mb-3">
                             <i class="fa-solid fa-user-group fa-lg mr-2"></i> Travel Crew
                         </label>
                         {{ form_widget(form.travelers, {'attr': {'class': 'form-input text-black-neutral'}}) }}
-                        {{ form_errors(form.travelers) }}
+                        {% if form.travelers.vars.errors|length > 0 %}
+                            <div class="text-orange mt-3">
+                                {{ form_errors(form.travelers) }}
+                            </div>
+                        {% endif %}
                     </div>
 
-                    <div class="w-full flex flex-col md:flex-row gap-6">
+                    <div class="w-full flex flex-col md:flex-row gap-6  2xl:gap-10 mb-8">
                         <div class="w-full md:w-1/2">
                             <label class="inline-block text-xl font-normal text-primary mb-3">
                                 <i class="fa-solid fa-calendar fa-lg mr-2"></i> Start Date
@@ -61,7 +65,9 @@
                                 {{ form_widget(form.start_date, {'attr': {'class': 'form-input text-light-grey', 'placeholder': form.start_date.vars.attr.placeholder}}) }}
                                 <i class="fa-solid fa-calendar fa-lg input-icon px-5"></i>
                             </div>
+                            <div class="text-orange mt-3">
                             {{ form_errors(form.start_date) }}
+                            </div>
                         </div>
 
                         <div class="w-full md:w-1/2">
@@ -72,11 +78,13 @@
                                 {{ form_widget(form.end_date, {'attr': {'class': 'form-input text-light-grey', 'placeholder': form.end_date.vars.attr.placeholder}}) }}
                                 <i class="fa-solid fa-calendar fa-lg input-icon px-5"></i>
                             </div>
-                            {{ form_errors(form.end_date) }}
+                            <div class="text-orange mt-3">
+                                {{ form_errors(form.end_date) }}
+                            </div>
                         </div>
                     </div>
 
-                    <div class="w-full flex flex-col md:flex-row gap-6">
+                    <div class="w-full flex flex-col md:flex-row gap-6 2xl:gap-10 mb-8">
                         <div class="w-full md:w-1/2">
                             <label class="inline-block text-xl font-normal text-primary mb-3">
                                 <i class="fa-solid fa-home fa-lg mr-2"></i> Start from Home?
@@ -89,7 +97,9 @@
                                     </div>
                                 {% endfor %}
                             </div>
-                            {{ form_errors(form.start_from_home) }}
+                            <div class="text-orange mt-3">
+                                {{ form_errors(form.start_from_home) }}
+                            </div>
                         </div>
 
                         <div class="w-full md:w-1/2">
@@ -104,12 +114,14 @@
                                     </div>
                                 {% endfor %}
                             </div>
-                            {{ form_errors(form.rent_car) }}
+                            <div class="text-orange mt-3">
+                                {{ form_errors(form.rent_car) }}
+                            </div>
                         </div>
                     </div>
 
-                    <div class="w-full flex flex-col lg:flex-row gap-6">
-                        <div class="w-full sm:w-1/2">
+                    <div class="w-full flex flex-col lg:flex-row gap-6  2xl:gap-10 mb-8">
+                        <div class="w-full lg:w-1/2">
                             <label class="inline-block text-xl font-normal text-primary mb-3">
                                 <i class="fa-solid fa-car-side fa-lg mr-2"></i> Select Your Ride
                             </label>
@@ -120,7 +132,7 @@
                             {{ form_errors(form.vehicle) }}
                         </div>
 
-                        <div class="w-full sm:w-1/2">
+                        <div class="w-full lg:w-1/2">
                             <label class="inline-block text-xl font-normal text-primary mb-3">
                                 <i class="fa-solid fa-piggy-bank fa-lg mr-2"></i> Trip Budget
                             </label>
@@ -132,7 +144,7 @@
                         </div>
                     </div>
 
-                    <div class="w-full">
+                    <div class="w-full mb-8">
                         <label class="inline-block text-xl font-normal text-primary mb-3">
                             <i class="fa-solid fa-road fa-lg mr-2"></i> Distance
                         </label>

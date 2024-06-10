@@ -14,6 +14,9 @@ use App\Form\RoadtripFormType;
 use App\Service\OpenAI\OpenAIService;
 use App\Service\Database\WaypointService;
 use App\Service\GoogleMaps\GoogleMapsService;
+use App\Service\Tripadvisor\TripadvisorService;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Security;
 use Psr\Log\LoggerInterface;
 
 class RoadtripController extends AbstractController
@@ -24,24 +27,40 @@ class RoadtripController extends AbstractController
         private readonly OpenAIService $openAIService,
         private readonly WaypointService $waypointService,
         private readonly GoogleMapsService $googleMapsService,
+        private readonly TripadvisorService $tripadvisorService,
         private readonly LoggerInterface $logger
     ) {}
 
     #[Route('/roadtrip/{id}/configure', name: 'app_roadtrip_configure')]
-    public function configure(Roadtrip $roadtrip): Response
+    public function configure(Roadtrip $roadtrip, Security $security): Response
     {
-        try {
-            $waypoints = $roadtrip->getWaypoints();
-            if (empty($waypoints)) {
-                throw new \Exception('No waypoints found for this roadtrip.');
+       
+            // Check if the user is logged in
+            $user = $security->getUser();
+            if (!$user) {
+                throw new AccessDeniedException('You must be logged in to access this page.');
             }
+    
+            // Check if the road trip belongs to the logged-in user
+            if ($roadtrip->getUser() !== $user) {
+                throw new AccessDeniedException('You do not have permission to access this road trip.');
+            }
+    
+            try {
 
-            return $this->render('roadtrip/configure.html.twig', [
-                'roadtrip' => $roadtrip,
-                'country' => $roadtrip->getCountry(),
-                'waypoints' => $roadtrip->getWaypoints(),
-            ]);
-
+                $waypoints = $roadtrip->getWaypoints();
+                $this->tripadvisorService->searchAllNearbyPlaces($waypoints->toArray());
+                
+                if (empty($waypoints)) {
+                    throw new \Exception('No waypoints found for this roadtrip.');
+                }
+        
+                return $this->render('roadtrip/configure.html.twig', [
+                    'roadtrip' => $roadtrip,
+                    'country' => $roadtrip->getCountry(),
+                    'waypoints' => $roadtrip->getWaypoints(),
+                ]);
+    
         } catch (\Exception $e) {
             $this->logger->error('Error in configure method', ['exception' => $e]);
             return new Response('An error occurred: ' . $e->getMessage(), 500);
