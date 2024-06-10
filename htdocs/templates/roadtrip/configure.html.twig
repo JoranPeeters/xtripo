@@ -4,58 +4,67 @@
 {% block title %}Configure Roadtrip{% endblock %}
 
 {% block body %}
-<h1>{{ roadtrip.title ?? 'My roadtrip to ' ~ country.name }}</h1>
-<p>Start Date: {{ roadtrip.startDate|date('Y-m-d') }}</p>
-<p>End Date: {{ roadtrip.endDate|date('Y-m-d') }}</p>
-<h2>{{ country.name }}</h2>
-<div id="container">
-    <div id="map"></div>
-    <div id="sidebar">
-        <div>
-            <b>Start:</b>
-            <select id="start">
-                {% for waypoint in waypoints %}
-                    <option value="{{ waypoint.latitude }},{{ waypoint.longitude }}" data-title="{{ waypoint.locationName }}">{{ waypoint.locationName }}</option>
-                {% endfor %}
-            </select>
-            <br />
-            <b>Waypoints:</b> <br />
-            <i>(Ctrl+Click or Cmd+Click for multiple selection)</i> <br />
-            <select multiple id="waypoints">
-                {% for waypoint in waypoints %}
-                    {% if not loop.first and not loop.last %}
-                        <option value="{{ waypoint.latitude }},{{ waypoint.longitude }}" data-title="{{ waypoint.locationName }}">{{ waypoint.locationName }}</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
-            <br />
-            <b>End:</b>
-            <select id="end">
-                {% for waypoint in waypoints %}
-                    <option value="{{ waypoint.latitude }},{{ waypoint.longitude }}" data-title="{{ waypoint.locationName }}">{{ waypoint.locationName }}</option>
-                {% endfor %}
-            </select>
-            <br />
-            <input type="submit" id="submit" />
-        </div>
-        <div id="directions-panel"></div>
-    </div>
-</div>
-<div id="roadtripMap" class="mt-36 rounded-20" style="height: 500px; width: 100%;"></div>
+    <h1 class="mt-36">{{ roadtrip.title ?? 'My roadtrip to ' ~ country.name }}</h1>
+        <p>Start Date: {{ roadtrip.startDate|date('Y-m-d') }}</p>
+        <p>End Date: {{ roadtrip.endDate|date('Y-m-d') }}</p>
+        <h2 class="mt-36">{{ country.name }}</h2>
 
-{% for waypoint in waypoints %}
-<h2>{{ waypoint.locationName }}</h2>
-<strong>{{ waypoint.description }}</strong>
+        {% for place in nearbyPlaces %}
+            <h3>{{ place.name }}</h3>
+            <p>{{ place.description }}</p>
+            <div class="w-14">
+            <img src='{{ place.photoUrl }}' class="w-14"/>
+            </div>
+        {% endfor %}
 
-<p>{{ waypoint.advice }}</p>
-<p>{{ waypoint.bestHours }}</p>
-<p>{{ waypoint.distance }}</p>
-<p>{{ waypoint.latitude }}</p>
-<p>{{ waypoint.longitude }}</p>
-{% endfor %}
+            <div id="container">
+                <div id="map"></div>
+                    <div id="sidebar">
+                            <div>
+                                <b>Start:</b>
+                                <select id="start">
+                                    {% for waypoint in waypoints %}
+                                        <option value="{{ waypoint.latitude }},{{ waypoint.longitude }}" data-title="{{ waypoint.locationName }}">{{ waypoint.locationName }}</option>
+                                    {% endfor %}
+                                </select>
+                                <br />
+                                <b>Waypoints:</b> <br />
+                                <i>(Ctrl+Click or Cmd+Click for multiple selection)</i> <br />
+                                <select multiple id="waypoints">
+                                    {% for waypoint in waypoints %}
+                                        {% if not loop.first and not loop.last %}
+                                            <option value="{{ waypoint.latitude }},{{ waypoint.longitude }}" data-title="{{ waypoint.locationName }}">{{ waypoint.locationName }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <br />
+                                <b>End:</b>
+                                <select id="end">
+                                    {% for waypoint in waypoints %}
+                                        <option value="{{ waypoint.latitude }},{{ waypoint.longitude }}" data-title="{{ waypoint.locationName }}">{{ waypoint.locationName }}</option>
+                                    {% endfor %}
+                                </select>
+                                <br />
+                                <input type="submit" id="submit" />
+                            </div>
+                        <div id="directions-panel"></div>
+                    </div>
+                </div>
+            <div id="roadtripMap" class="mt-36 rounded-20" style="height: 500px; width: 100%;"></div>
 
-<h2>Configure Waypoints</h2>
-<a href="{{ path('app_roadtrip_view', {'id': roadtrip.id}) }}" class="btn btn-success">Save and View</a>
+        {% for waypoint in waypoints %}
+            <h2>{{ waypoint.locationName }}</h2>
+            <strong>{{ waypoint.description }}</strong>
+
+            <p>{{ waypoint.advice }}</p>
+            <p>{{ waypoint.bestHours }}</p>
+            <p>{{ waypoint.distance }}</p>
+            <p>{{ waypoint.latitude }}</p>
+            <p>{{ waypoint.longitude }}</p>
+        {% endfor %}
+
+        <h2>Configure Waypoints</h2>
+        <a href="{{ path('app_roadtrip_view', {'id': roadtrip.id}) }}" class="btn btn-success">Save and View</a>
 {% endblock %}
 
 {% block javascripts %}

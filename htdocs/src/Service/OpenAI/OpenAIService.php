@@ -52,8 +52,8 @@ class OpenAIService
             - Location Name: The name of the location.
             - Description: A brief description of the location.
             - Advice: Specific advice or tips for this location.
-            - Longitude: The longitude coordinate of the location.
-            - Latitude: The latitude coordinate of the location.
+            - Longitude: The longitude coordinate of the location, make sure it is valid for google directions.
+            - Latitude: The latitude coordinate of the location, make sure it is valid for google directions.
             - Distance: The distance from previous waypoint in kilometers.
             - Type: Only Select from these types! Users predefined road trip types: ' . $roadtripTypes . '.
             - City: The city where the waypoint is located.
@@ -99,26 +99,9 @@ class OpenAIService
                     "day": 2,
                     "waypoints": [
                       {
-                        "location_name": "Atomium",
-                        "description": "A unique building in Brussels that symbolizes an iron crystal magnified 165 billion times.",
-                        "advice": "Visit at night when it\'s illuminated for a magical experience.",
-                        "longitude": "4.3416" (Float),
-                        "latitude": "50.8949" (Float),
-                        "distance": 759.7 (int),
-                        "type": "landmark",
-                        "city": "Brussels"
-                        "best_hours": "20:00 - 22:00"
-                      },
+                        ...
                       {
-                        "location_name": "Manneken Pis",
-                        "description": "A small bronze sculpture in Brussels depicting a naked little boy urinating into a fountain.",
-                        "advice": "Don\'t miss the chance to see this quirky statue up close.",
-                        "longitude": "4.3488" (Float),
-                        "latitude": "50.8466" (Float),
-                        "distance": 8.8 (int),
-                        "type": "City Exploration",
-                        "city": "Brussels"
-                        "best_hours": "10:00 - 12:00"
+                        ...
                       }
                     ]
                   }';

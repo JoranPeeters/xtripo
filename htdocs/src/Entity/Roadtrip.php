@@ -75,20 +75,17 @@ class Roadtrip
     #[ORM\JoinTable(name: 'roadtrip_roadtrip_type')]
     private $roadtrip_types;
 
-    #[ORM\ManyToMany(targetEntity: Activity::class, inversedBy: 'roadtrips')]
-    #[ORM\JoinTable(name: 'roadtrip_activities')]
-    private Collection $activities;
-    
-    #[ORM\OneToMany(mappedBy: 'roadtrip', targetEntity: Accommodation::class)]
-    private $accommodations;
-
     #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'roadtrips')]
     #[ORM\JoinColumn(nullable: false)]
     private $starting_point;
 
+    #[ORM\ManyToMany(targetEntity: Place::class, inversedBy: 'roadtrips')]
+    #[ORM\JoinTable(name: 'roadtrip_places')]
+    private Collection $places;
+
     public function __construct()
     {
-        $this->activities = new ArrayCollection(); 
+        $this->places = new ArrayCollection();
         $this->roadtrip_types = new ArrayCollection();                         
         $this->waypoints = new ArrayCollection();
     }
@@ -324,64 +321,7 @@ class Roadtrip
 
         return $this;
     }
-
-    /**
-     * @return Collection|Activity[]
-     */
-    public function getActivities(): Collection
-    {
-        return $this->activities;
-    }
-
-    public function addActivity(Activity $activity): self
-    {
-        if (!$this->activities->contains($activity)) {
-            $this->activities->add($activity);
-            $activity->addRoadtrip($this);
-        }
-
-        return $this;
-    }
-
-    public function removeActivity(Activity $activity): self
-    {
-        if ($this->activities->removeElement($activity)) {
-            $activity->removeRoadtrip($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Accommodation[]
-     */
-    public function getAccommodations(): Collection
-    {
-        return $this->accommodations;
-    }
-
-    public function addAccommodation(Accommodation $accommodation): self
-    {
-        if (!$this->accommodations->contains($accommodation)) {
-            $this->accommodations[] = $accommodation;
-            $accommodation->setRoadtrip($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAccommodation(Accommodation $accommodation): self
-    {
-        if ($this->accommodations->removeElement($accommodation)) {
-            // set the owning side to null (unless already changed)
-            if ($accommodation->getRoadtrip() === $this) {
-                $accommodation->setRoadtrip(null);
-            }
-        }
-
-        return $this;
-    }
-
+    
     public function getStartingPoint(): ?City
     {
         return $this->starting_point;
@@ -390,6 +330,30 @@ class Roadtrip
     public function setStartingPoint(?City $starting_point): self
     {
         $this->starting_point = $starting_point;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Place[]
+     */
+    public function getPlaces(): Collection
+    {
+        return $this->places;
+    }
+
+    public function addPlace(Place $place): self
+    {
+        if (!$this->places->contains($place)) {
+            $this->places[] = $place;
+        }
+
+        return $this;
+    }
+
+    public function removePlace(Place $place): self
+    {
+        $this->places->removeElement($place);
 
         return $this;
     }

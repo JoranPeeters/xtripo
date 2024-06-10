@@ -11,7 +11,6 @@ use App\Service\OpenAI\OpenAIService;
 
 class WaypointService
 {
-    
     public function __construct(
         private readonly WaypointRepository $waypointRepository,
         private readonly CityRepository $cityRepository,
@@ -67,5 +66,28 @@ class WaypointService
     {
         $roadtripWaypoints = $this->openAIService->generateRoadtrip($roadtrip);
         $this->saveWaypoints($roadtripWaypoints, $roadtrip);
+    }
+
+    public function getFirstWaypointsOfEachDay(array $waypoints): array
+    {
+        $firstWaypoints = [];
+        $waypointsByDay = [];
+
+        foreach ($waypoints as $waypoint) {
+            $day = $waypoint->getDay();
+            if (!isset($waypointsByDay[$day])) {
+                $waypointsByDay[$day] = [];
+            }
+            $waypointsByDay[$day][] = $waypoint;
+        }
+
+        foreach ($waypointsByDay as $day => $waypointsForDay) {
+            usort($waypointsForDay, function($a, $b) {
+                return $a->getCreatedAt() <=> $b->getCreatedAt(); // Using getCreatedAt method to sort waypoints
+            });
+            $firstWaypoints[] = $waypointsForDay[0];
+        }
+
+        return $firstWaypoints;
     }
 }

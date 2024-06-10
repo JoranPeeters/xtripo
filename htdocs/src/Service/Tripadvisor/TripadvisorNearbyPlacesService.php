@@ -2,102 +2,62 @@
 
 namespace App\Service\Tripadvisor;
 
-use App\Service\Tripadvisor\TripadvisorApiService;
-use App\Service\Tripadvisor\TripadvisorPlaceDetailService;
+use App\Repository\PlaceRepository;
 
 class TripadvisorNearbyPlacesService
 {
+    private const SEARCH_RADIUS_KM = 3; // Define the search radius in kilometers
+
     public function __construct(
         private readonly TripadvisorApiService $tripadvisorApiService,
         private readonly TripadvisorPlaceDetailService $tripadvisorPlaceDetailService,
-    ) {
-    }
+        private readonly PlaceRepository $placeRepository,
+    ) {}
 
-    public function searchNearbyPlaces(string $latLongCoordinate): array
+    public function searchNearbyPlaces(string $latLongCoordinate, string $language): array
     {
-         $nearbyPlaces = [
-            'restaurants' => $this->searchNearbyRestaurants($latLongCoordinate),
-            'attractions' => $this->searchNearbyAttractions($latLongCoordinate),
-            'hotels' => $this->searchNearbyHotels($latLongCoordinate),
-            'geos' => $this->searchNearbyGeos($latLongCoordinate),
+        $nearbyPlaces = [
+            'restaurant' => $this->searchNearbyCategory($latLongCoordinate, 'restaurants', $language),
+            'attraction' => $this->searchNearbyCategory($latLongCoordinate, 'attractions', $language),
+            'hotel' => $this->searchNearbyCategory($latLongCoordinate, 'hotels', $language),
+            'geo' => $this->searchNearbyCategory($latLongCoordinate, 'geos', $language),
         ];
 
         $nearbyPlaceIds = $this->getNearbyPlaceIds($nearbyPlaces);
         $nearbyPlaceDetails = $this->tripadvisorPlaceDetailService->getPlaceDetails($nearbyPlaceIds);
 
-        return $nearbyPlaces;
+        return $nearbyPlaceDetails;
     }
 
-    private function searchNearbyRestaurants(string $latLongCoordinate): array
+    private function searchNearbyCategory(string $latLongCoordinate, string $category, string $language): array
+    {
+        [$latitude, $longitude] = explode(',', $latLongCoordinate);
+
+        // Check existing places in the database based on proximity
+        $existingPlaces = $this->placeRepository->findNearbyPlaces((float)$latitude, (float)$longitude, $category, self::SEARCH_RADIUS_KM);
+
+        if (count($existingPlaces) > 0) {
+            return $existingPlaces;
+        }
+
+        // If no existing places found, make an API request
+        $results = $this->getTripAdvisorNearbyPlaces($latLongCoordinate, $category, $language);
+
+        return $results ?? [];
+    }
+
+    private function getTripAdvisorNearbyPlaces(string $latLongCoordinate, string $category, string $language): array
     {
         $results = $this->tripadvisorApiService->makeApiRequest('https://api.content.tripadvisor.com/api/v1/location/nearby_search', [
             'latLong' => $latLongCoordinate,
             'key' => $_ENV['TRIPADVISOR_API_KEY'],
-            'radius' => 5,
+            'radius' => self::SEARCH_RADIUS_KM,
             'radiusUnit' => 'km',
-            'language' => 'en',
-            'category' => 'restaurants',
+            'language' => $language,
+            'category' => $category,
         ]);
 
-        if (!isset($results['data'])) {
-            return [];
-        }
-
-        return $results['data'];
-    }
-
-    private function searchNearbyAttractions(string $latLongCoordinate): array
-    {
-        $results = $this->tripadvisorApiService->makeApiRequest('https://api.content.tripadvisor.com/api/v1/location/nearby_search', [
-            'latLong' => $latLongCoordinate,
-            'key' => $_ENV['TRIPADVISOR_API_KEY'],
-            'radius' => 20,
-            'radiusUnit' => 'km',
-            'language' => 'en',
-            'category' => 'attractions',
-        ]);
-
-        if (!isset($results['data'])) {
-            return [];
-        }
-
-        return $results['data'];
-    }
-
-    private function searchNearbyHotels(string $latLongCoordinate): array
-    {
-        $results = $this->tripadvisorApiService->makeApiRequest('https://api.content.tripadvisor.com/api/v1/location/nearby_search', [
-            'latLong' => $latLongCoordinate,
-            'key' => $_ENV['TRIPADVISOR_API_KEY'],
-            'radius' => 10,
-            'radiusUnit' => 'km',
-            'language' => 'en',
-            'category' => 'hotels',
-        ]);
-
-        if (!isset($results['data'])) {
-            return [];
-        }
-
-        return $results['data'];
-    }
-
-    private function searchNearbyGeos(string $latLongCoordinate): array
-    {
-        $results = $this->tripadvisorApiService->makeApiRequest('https://api.content.tripadvisor.com/api/v1/location/nearby_search', [
-            'latLong' => $latLongCoordinate,
-            'key' => $_ENV['TRIPADVISOR_API_KEY'],
-            'radius' => 20,
-            'radiusUnit' => 'km',
-            'language' => 'en',
-            'category' => 'geos',
-        ]);
-
-        if (!isset($results['data'])) {
-            return [];
-        }
-
-        return $results['data'];
+        return $results['data'] ?? [];
     }
 
     private function getNearbyPlaceIds(array $nearbyPlaces): array

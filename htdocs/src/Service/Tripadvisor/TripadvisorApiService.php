@@ -10,8 +10,7 @@ class TripadvisorApiService
     public function __construct(
         private HttpClientInterface $client,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function makeApiRequest(string $endpoint, array $queryParams): ?array
     {
@@ -23,7 +22,6 @@ class TripadvisorApiService
         ]);
 
         if ($response->getStatusCode() !== 200) {
-
             $this->logger->error('API request failed', [
                 'endpoint' => $endpoint,
                 'queryParams' => $queryParams,

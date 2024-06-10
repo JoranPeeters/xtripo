@@ -32,44 +32,45 @@ class RoadtripController extends AbstractController
     ) {}
 
     #[Route('/roadtrip/{id}/configure', name: 'app_roadtrip_configure')]
-    public function configure(Roadtrip $roadtrip, Security $security): Response
+    public function configure(Roadtrip $roadtrip, Security $security, TripadvisorService $tripadvisorService, LoggerInterface $logger): Response
     {
-       
-            // Check if the user is logged in
-            $user = $security->getUser();
-            if (!$user) {
-                throw new AccessDeniedException('You must be logged in to access this page.');
-            }
+        // Check if the user is logged in
+        $user = $security->getUser();
+        if (!$user) {
+            throw new AccessDeniedException('You must be logged in to access this page.');
+        }
     
-            // Check if the road trip belongs to the logged-in user
-            if ($roadtrip->getUser() !== $user) {
-                throw new AccessDeniedException('You do not have permission to access this road trip.');
-            }
+        // Check if the road trip belongs to the logged-in user
+        if ($roadtrip->getUser() !== $user) {
+            throw new AccessDeniedException('You do not have permission to access this road trip.');
+        }
     
-            try {
+        try {
+            $waypoints = $roadtrip->getWaypoints();
+            if (empty($waypoints)) {
+                throw new \Exception('No waypoints found for this roadtrip.');
+            }
 
-                $waypoints = $roadtrip->getWaypoints();
-                $this->tripadvisorService->searchAllNearbyPlaces($waypoints->toArray());
-                
-                if (empty($waypoints)) {
-                    throw new \Exception('No waypoints found for this roadtrip.');
-                }
-        
-                return $this->render('roadtrip/configure.html.twig', [
-                    'roadtrip' => $roadtrip,
-                    'country' => $roadtrip->getCountry(),
-                    'waypoints' => $roadtrip->getWaypoints(),
-                ]);
+            $nearbyPlaces = $tripadvisorService->getAllNearbyPlaces($roadtrip);
+
+            // Calculate the number of days for the roadtrip
+            $startDate = $roadtrip->getStartDate();
+            $endDate = $roadtrip->getEndDate();
+            $days = $startDate->diff($endDate)->days + 1; // Adding 1 to include both start and end date
     
+            return $this->render('roadtrip/configure.html.twig', [
+                'roadtrip' => $roadtrip,
+                'country' => $roadtrip->getCountry(),
+                'waypoints' => $roadtrip->getWaypoints(),
+                'days' => $days,
+                'nearbyPlaces' => $nearbyPlaces,
+            ]);
         } catch (\Exception $e) {
-            $this->logger->error('Error in configure method', ['exception' => $e]);
+            $logger->error('Error in configure method', ['exception' => $e]);
             return new Response('An error occurred: ' . $e->getMessage(), 500);
-            // // Render a different template or return a custom response
-            // return $this->render('roadtrip/error.html.twig', [
-            //     'errorMessage' => 'An error occurred while configuring the roadtrip: ' . $e->getMessage()
-            // ]);
         }
     }
+
     
 
     #[Route('/roadtrip/{id}', name: 'app_roadtrip_view')]

@@ -17,6 +17,7 @@ use App\Service\Database\WaypointService;
 use App\Service\GoogleMaps\GoogleMapsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
+use App\Service\Tripadvisor\TripadvisorService;
 use App\Entity\Roadtrip;
 use App\Form\RoadtripFormType;
 
@@ -33,7 +34,8 @@ class PlannerController extends AbstractController
         private readonly Security $security,
         private readonly WaypointService $waypointService,
         private readonly GoogleMapsService $googleMapsService,
-        private readonly RoadtripService $roadtripService
+        private readonly RoadtripService $roadtripService,
+        private readonly TripadvisorService $tripadvisorService,
     ) {}
     
 
@@ -54,6 +56,11 @@ class PlannerController extends AbstractController
 
             // Generate and save the waypoints
             $this->waypointService->generateAndSaveWaypoints($roadtrip);
+            $this->entityManager->refresh($roadtrip);
+            $waypoints = $roadtrip->getWaypoints();
+
+            $firstWaypoints = $this->waypointService->getFirstWaypointsOfEachDay($waypoints->toArray());
+            $this->tripadvisorService->fetchAndSaveAllNearbyPlaces($firstWaypoints, $roadtrip->getId());
 
             // Redirect to the configure page with the roadtrip and waypoints
             return $this->redirectToRoute('app_roadtrip_configure', [
