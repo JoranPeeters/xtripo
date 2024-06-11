@@ -4,13 +4,14 @@ namespace App\Service\Tripadvisor;
 
 use App\Repository\PlaceRepository;
 use App\Entity\Roadtrip;
-use App\Entity\Place;
+use App\Repository\RoadtripRepository;
 
 class TripadvisorService
 {
     public function __construct(
         private readonly TripadvisorNearbyPlacesService $tripadvisorNearbyPlacesService,
         private readonly PlaceRepository $placeRepository,
+        private readonly RoadtripRepository $roadtripRepository,
     ) {
     }
 
@@ -23,11 +24,13 @@ class TripadvisorService
 
     private function saveAllNearbyPlaces(array $nearbyPlaces, int $roadtripId): void
     {
+        $roadtrip = $this->roadtripRepository->find($roadtripId);
+        dd($roadtrip);
         foreach ($nearbyPlaces as $nearbyPlace) {
             foreach ($nearbyPlace as $place) {
                 $existingPlace = $this->placeRepository->findOneBy(['place_id' => $place['place_id']]);
                 if(!$existingPlace) {
-                    $this->placeRepository->savePlace($place, $place['category'], $roadtripId);
+                    $this->placeRepository->savePlace($place, $place['category'], $roadtrip);
                 }
             }
         }

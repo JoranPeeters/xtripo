@@ -32,9 +32,8 @@ class PlaceRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function savePlace(array $placeData, string $category, int $roadtripId): void
+    public function savePlace(array $placeData, string $category, Roadtrip $roadtrip): void
     {
-        $roadtrip = $this->getEntityManager()->getRepository(Roadtrip::class)->find($roadtripId);
         $place = new Place();
         $place->setName($placeData['name'] ?? '')
               ->setDescription($placeData['description'] ?? '')

@@ -6,6 +6,7 @@ use App\Entity\Roadtrip;
 use App\Repository\RoadtripRepository;
 use App\Repository\CountryRepository;
 use App\Repository\RoadtripTypeRepository;
+use App\Entity\User;
 
 class RoadtripService
 {
@@ -16,17 +17,19 @@ class RoadtripService
     ) {
     }
 
-    public function saveRoadtripAndUpdatePopularity(Roadtrip $roadtrip): void
+    public function saveRoadtripAndUpdatePopularity(Roadtrip $roadtrip, User $user): void
     {
         $country = $roadtrip->getCountry();
+        dd($country);
         $country->setPopularity($country->getPopularity() + 1);
         $this->countryRepository->save($country);
+        $roadtrip->setUser($user);
 
         foreach ($roadtrip->getRoadtripTypes() as $type) {
             $type->setPopularity($type->getPopularity() + 1);
-            $this->roadtripTypeRepository->save($type);
+            $this->roadtripRepository->save($roadtrip);
         }
 
-        $this->roadtripRepository->save($roadtrip, true);
+        $this->roadtripRepository->flush($roadtrip);
     }
 }

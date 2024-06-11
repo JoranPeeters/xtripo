@@ -47,12 +47,8 @@ class PlannerController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // Set the user and save the roadtrip
-            $roadtrip->setUser($this->getUser());
-
             // Save the roadtrip and update the popularity of the country and roadtrip types
-            $this->roadtripService->saveRoadtripAndUpdatePopularity($roadtrip);
+            $this->roadtripService->saveRoadtripAndUpdatePopularity($roadtrip, $this->getUser());
 
             // Generate and save the waypoints
             $this->waypointService->generateAndSaveWaypoints($roadtrip);
