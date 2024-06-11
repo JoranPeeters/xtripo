@@ -13,23 +13,22 @@ class RoadtripService
     public function __construct(
         private readonly RoadtripRepository $roadtripRepository,
         private readonly CountryRepository $countryRepository, 
-        private readonly RoadtripTypeRepository $roadtripTypeRepository
+        private readonly RoadtripTypeRepository $roadtripTypeRepository,
     ) {
     }
 
     public function saveRoadtripAndUpdatePopularity(Roadtrip $roadtrip, User $user): void
     {
         $country = $roadtrip->getCountry();
-        dd($country);
         $country->setPopularity($country->getPopularity() + 1);
-        $this->countryRepository->save($country);
         $roadtrip->setUser($user);
+        $roadtrip->setImageUrl('https://imageio.forbes.com/specials-images/imageserve/62bdd4a21a6dc599d18bca9b/summer-road-trips/960x0.jpg?height=474&width=711&fit=bounds');
 
         foreach ($roadtrip->getRoadtripTypes() as $type) {
             $type->setPopularity($type->getPopularity() + 1);
-            $this->roadtripRepository->save($roadtrip);
         }
 
-        $this->roadtripRepository->flush($roadtrip);
+        $this->countryRepository->save($country);
+        $this->roadtripRepository->save($roadtrip);
     }
 }

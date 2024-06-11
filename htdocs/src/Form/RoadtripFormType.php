@@ -16,7 +16,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
-use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -42,111 +41,111 @@ class RoadtripFormType extends AbstractType
                 'group_by' => function (City $city) {
                     return $city->getCountry()->getName();
                 },
-                'label' => 'Starting Point',
+                'label' => 'form.starting_point.label',
                 'required' => true,
-                'placeholder' => 'Choose your starting area',
+                'placeholder' => 'form.roadtrip.starting_point.placeholder',
                 'constraints' => [
-                    new NotBlank(['message' => 'Starting point is required']),
+                    new NotBlank(['message' => 'form.starting_point.error']),
                 ],
             ])
 
             ->add('country', EntityType::class, [
                 'class' => Country::class,
                 'choice_label' => 'name',
-                'label' => 'Destination Country',
+                'label' => 'form.croadtrip.country.label',
                 'required' => true,
-                'placeholder' => 'Which country will you explore?',
+                'placeholder' => 'form.roadtrip.country.placeholder',
                 'constraints' => [
-                    new NotBlank(['message' => 'Destination country is required']),
+                    new NotBlank(['message' => 'form.croadtrip.country.error']),
                 ],
             ])
 
             ->add('travelers', IntegerType::class, [
-                'label' => 'Travel Crew',
-                'attr' => ['placeholder' => 'How many are joining?'],
+                'label' => 'form.roadtrip.travelers.label',
+                'attr' => ['placeholder' => 'form.roadtrip.travelers.placeholder'],
                 'constraints' => [
-                    new NotBlank(['message' => 'Number of travelers is required']),
-                    new GreaterThanOrEqual(['value' => 1, 'message' => 'The number of travelers must be at least 1']),
+                    new NotBlank(['message' => 'form.roadtrip.travelers.error_1']),
+                    new GreaterThanOrEqual(['value' => 1, 'message' => 'form.roadtrip.travelers.error_2']),
                 ],
             ])
 
             ->add('start_date', DateType::class, [
                 'widget' => 'single_text',
-                'label' => 'Start Date',
-                'attr' => ['placeholder' => 'When does the fun start?'],
+                'label' => 'form.roadtrip.start_date.label',
+                'attr' => ['placeholder' => 'form.roadtrip.start_date.placeholder'],
                 'constraints' => [
-                    new NotBlank(['message' => 'Start date is required']),
+                    new NotBlank(['message' => 'form.roadtrip.start_date.error']),
                 ],
             ])
 
             ->add('end_date', DateType::class, [
                 'widget' => 'single_text',
-                'label' => 'End Date',
-                'attr' => ['placeholder' => 'When does the fun end?'],
+                'label' => 'form.roadtrip.end_date.label',
+                'attr' => ['placeholder' => 'form.roadtrip.end_date.placeholder'],
                 'constraints' => [
-                    new NotBlank(['message' => 'End date is required']),
+                    new NotBlank(['message' => 'form.roadtrip.end_date.error_1']),
                     new Callback([$this, 'validateDates']),
                 ],
             ])
 
             ->add('start_from_home', ChoiceType::class, [
                 'choices' => [
-                    'Yes' => true,
-                    'No' => false,
+                    'form.roadtrip.start_from_home.yes' => true,
+                    'form.roadtrip.start_from_home.no' => false,
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'label' => 'Do you want to start from home?',
+                'label' => 'form.roadtrip.start_from_home.label',
             ])
 
             ->add('rent_car', ChoiceType::class, [
                 'choices' => [
-                    'Yes' => true,
-                    'No' => false,
+                    'form.roadtrip.rent_car.yes' => true,
+                    'form.roadtrip.rent_car.no' => false,
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'label' => 'Need a Rental Car?',
+                'label' => 'form.roadtrip.rent_car.label',
             ])
 
             ->add('vehicle', EntityType::class, [
                 'class' => Vehicle::class,
                 'choice_label' => 'vehicle_type',
-                'label' => 'Select Your Ride',
-                'placeholder' => 'Choose your vehicle',
-                'required' => false,
+                'label' => 'form.roadtrip.vehicle.label',
+                'placeholder' => 'form.roadtrip.vehicle.placeholder',
             ])
 
             ->add('cost_preferences', ChoiceType::class, [
                 'choices' => [
-                    'Budget (Economy)' => Roadtrip::COST_LOW,
-                    'Mid-range (Comfort)' => Roadtrip::COST_MODERATE,
-                    'Luxury (Premium)' => Roadtrip::COST_HIGH,
+                    'form.roadtrip.cost_preferences.low' => Roadtrip::COST_LOW,
+                    'form.roadtrip.cost_preferences.medium' => Roadtrip::COST_MODERATE,
+                    'form.roadtrip.cost_preferences.high' => Roadtrip::COST_HIGH,
                 ],
-                'label' => 'Trip Budget',
-                'placeholder' => 'What\'s your spending style?',
+                'label' => 'form.roadtrip.cost_preferences.label',
+                'placeholder' => 'form.roadtrip.cost_preferences.placeholder',
             ])
 
             ->add('distance', ChoiceType::class, [
                 'choices' => [
-                    'Short (0-100 km/day)' => Roadtrip::DISTANCE_SHORT,
-                    'Medium (100-300 km/day)' => Roadtrip::DISTANCE_MEDIUM,
-                    'Long (300+ km/day)' => Roadtrip::DISTANCE_LONG,
+                    'form.roadtrip.distance.short' => Roadtrip::DISTANCE_SHORT,
+                    'form.roadtrip.distance.medium' => Roadtrip::DISTANCE_MEDIUM,
+                    'form.roadtrip.distance.long' => Roadtrip::DISTANCE_LONG,
                 ],
-                'label' => 'Distance',
-                'placeholder' => 'How far will you travel each day?',
+                'label' => 'form.roadtrip.distance.label',
+                'placeholder' => 'form.roadtrip.distance.placeholder',
             ])
 
             ->add('roadtrip_types', EntityType::class, [
                 'class' => RoadtripType::class,
                 'choice_label' => 'name',
-                'label' => 'Trip Preferences',
+                'label' => 'form.roadtrip.roadtrip_types.label',
                 'multiple' => true,
                 'expanded' => true,
+                'required' => false,
             ])
 
             ->add('save', SubmitType::class, [
-                'label' => 'Start the Adventure!',
+                'label' => 'form.roadtrip.save.label',
             ]);
     }
 
@@ -160,14 +159,14 @@ class RoadtripFormType extends AbstractType
             $now = new \DateTime();
             $now->setTime(0, 0, 0);
             if ($startDate < $now || $endDate < $now) {
-                $context->buildViolation('The date cannot be in the past.')
+                $context->buildViolation('form.roadtrip.end_date.error_2')
                     ->atPath('start_date')
                     ->addViolation();
             }
 
             $diff = $endDate->diff($startDate)->days;
             if ($diff > 7) {
-                $context->buildViolation('The road trip cannot be longer than 7 days.')
+                $context->buildViolation('form.roadtrip.end_date.error_3')
                     ->atPath('end_date')
                     ->addViolation();
             }

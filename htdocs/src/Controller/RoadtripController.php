@@ -14,13 +14,17 @@ use App\Form\RoadtripFormType;
 use App\Service\OpenAI\OpenAIService;
 use App\Service\Database\WaypointService;
 use App\Service\GoogleMaps\GoogleMapsService;
+use App\Service\Database\RoadtripService;
 use App\Service\Tripadvisor\TripadvisorService;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 use Psr\Log\LoggerInterface;
+use Monolog\Logger;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RoadtripController extends AbstractController
 {
+    
     public function __construct(
         private readonly RoadtripRepository $roadtripRepository,
         private readonly EntityManagerInterface $entityManager,
@@ -28,8 +32,54 @@ class RoadtripController extends AbstractController
         private readonly WaypointService $waypointService,
         private readonly GoogleMapsService $googleMapsService,
         private readonly TripadvisorService $tripadvisorService,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly RoadtripService $roadtripService,
+        private readonly TranslatorInterface $translator,
     ) {}
+
+    #[Route('/roadtrip/new', name: 'app_roadtrip_new')]
+    public function new(RoadtripRepository $roadtripRepository, RoadtripService $roadtripService, Request $request): Response
+    {
+        $logger = new Logger('name'); 
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $roadtrip = new Roadtrip();
+        $form = $this->createForm(RoadtripFormType::class, $roadtrip);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $startTime = microtime(true);
+
+            $roadtripService->saveRoadtripAndUpdatePopularity($roadtrip, $this->getUser());
+            $roadtripRepository->flush();
+            $this->addFlash('success', $this->translator->trans('message.roadtrip.created'));
+            $this->logger->info('New roadtrip created', ['roadtrip' => $roadtrip]);
+
+           
+
+            $this->waypointService->generateAndSaveWaypoints($roadtrip);
+
+
+            $endTime = microtime(true);
+            $duration = $endTime - $startTime;
+            $this->logger->info('OpenAI API call + flushing database duration: ' . $duration . ' seconds');
+            return $this->render('home/index.html.twig', []);
+
+            //$this->entityManager->refresh($roadtrip);
+            //$waypoints = $roadtrip->getWaypoints();
+
+            //$firstWaypoints = $this->waypointService->getFirstWaypointsOfEachDay($waypoints->toArray());
+            //$this->tripadvisorService->fetchAndSaveAllNearbyPlaces($firstWaypoints, $roadtrip->getId());
+
+            // Redirect to the configure page with the roadtrip and waypoints
+            return $this->redirectToRoute('app_roadtrip_configure', [
+                'id' => $roadtrip->getId()
+            ]);
+        }
+
+        return $this->render('roadtrip/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 
     #[Route('/roadtrip/{id}/configure', name: 'app_roadtrip_configure')]
     public function configure(Roadtrip $roadtrip, Security $security, TripadvisorService $tripadvisorService, LoggerInterface $logger): Response

@@ -1,0 +1,22 @@
+form:
+
+  roadtrip:
+
+    starting_point:
+      error: "Starting point is required"
+    
+    country:
+      error: "Destination country is required"
+
+    travelers:
+      error_1: "Number of travelers is required"
+      error_2: "The number of travelers must be at least 1"
+      
+
+    start_date:
+      error: "Start date is required" 
+
+    end_date:
+      error_1: "End date is required" 
+      error_2: "The date cannot be in the past."
+      error_3: "The road trip cannot be longer than 7 days."

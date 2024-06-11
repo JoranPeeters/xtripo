@@ -40,6 +40,9 @@ class Roadtrip
     #[ORM\Column(type: 'integer')]
     private $travelers;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $image_url;
+
     #[ORM\Column(type: 'boolean')]
     private $rent_car;
 
@@ -158,6 +161,18 @@ class Roadtrip
     public function setTravelers(int $travelers): self
     {
         $this->travelers = $travelers;
+
+        return $this;
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->image_url;
+    }
+
+    public function setImageUrl(string $image_url): self
+    {
+        $this->image_url = $image_url;
 
         return $this;
     }

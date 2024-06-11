@@ -29,23 +29,6 @@ user:
     success: "Registration successful!"
     failure: "Registration failed."
 
-# Form labels and validation messages
-form:
-  labels:
-    username: "Username"
-    password: "Password"
-    email: "Email"
-  validation:
-    required: "This field is required."
-    email: "Please enter a valid email address."
-    min_length: "This field must be at least {min} characters long."
-  error:
-    title: "error"
-    message: "Incorrect email or password!"
-  info:
-    title: "info"
-    logged_in: "You are now logged in as <b>%USER_FIRST_NAME%</b>"
-
 # Button texts
 buttons:
   submit: "Submit"
@@ -220,3 +203,89 @@ profile:
   settings: "User Settings"
   change_password: "Change Password"
   delete_account: "Delete Account"
+
+message:
+  roadtrip:
+    created: "Road trip successfully created!"
+
+form:
+  login:
+    labels:
+      username: "Username"
+      password: "Password"
+      email: "Email"
+    validation:
+      required: "This field is required."
+      email: "Please enter a valid email address."
+      min_length: "This field must be at least {min} characters long."
+    error:
+      title: "error"
+      message: "Incorrect email or password!"
+    info:
+      title: "info"
+      logged_in: "You are now logged in as <b>%USER_FIRST_NAME%</b>"
+
+  roadtrip:
+
+    starting_point:
+      label: "Starting point"
+      placeholder: "Choose your starting area"
+    
+    country:
+      label: "Destination country"
+      placeholder: "Which country will you explore?"
+
+    travelers:
+      label: "Travel Crew"
+      placeholder: "How many are joining?"
+      
+
+    start_date:
+      label: "Start date"
+      placeholder: "When does the fun start?"
+
+    end_date:
+      label: "End date"
+      placeholder: "When does the fun end?"
+
+    start_from_home:
+      label: "Do you want to start from home?"
+      yes: "Yes"
+      no: "No"
+
+    rent_car:
+      label: "Need a Rental Car?"
+      yes: "Yes"
+      no: "No"
+
+    vehicle:
+      label: "Select Your Ride"
+      placeholder: "Choose your vehicle"
+
+    cost_preferences:
+      label: "Cost preferences"
+      placeholder: "What's your spending style?"
+      low: "Low budget"
+      medium: "Medium budget"
+      high: "High budget"
+    
+    distance:
+      label: "Distance"
+      placeholder: "How far will you travel each day?"
+      short: "Short - 0-100 km/day"
+      medium: "Medium - 100-300 km/day"
+      long: "Long - 300+ km/day"
+
+    roadtrip_types:
+      label: "Trip Preferences"
+    
+    save:
+      label: "Start the adventure!"
+
+roadtrip:
+
+  new:
+    page_title: "planner"
+    heading: "Create your own road trip"
+    description: "Plan your ultimate road trip adventure with Xtripo. 
+    Enter your starting point, destination, travel dates, and preferences to get started."

@@ -6,6 +6,7 @@ namespace App\Service\OpenAI;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Entity\Roadtrip;
 use App\Repository\RoadtripTypeRepository;
+use Psr\Log\LoggerInterface;
 
 class OpenAIService
 {
@@ -13,7 +14,8 @@ class OpenAIService
 
     public function __construct(
         HttpClientInterface $client,
-        private readonly RoadtripTypeRepository $roadtripTypeRepository
+        private readonly RoadtripTypeRepository $roadtripTypeRepository,
+        private readonly LoggerInterface $logger,
     )
     {
         $this->client = $client;
@@ -146,22 +148,20 @@ class OpenAIService
                 'temperature' => $temperature,
             ],
         ]);
-
+    
         $responseData = $response->toArray();
         $jsonArrayString = $responseData['choices'][0]['message']['content'] ?? '';
-
-        //dd($jsonArrayString);
-
+    
         // Ensure valid JSON format
         $jsonArrayString = $this->ensureJsonFormat($jsonArrayString);
-
+    
         // Parse the JSON array string to a PHP array
         $data = json_decode($jsonArrayString, true);
-
+    
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new \RuntimeException('Invalid JSON response from OpenAI: ' . json_last_error_msg());
         }
-
+    
         return $data;
     }
 

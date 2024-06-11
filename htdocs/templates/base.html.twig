@@ -29,7 +29,7 @@
             <a href="{{ path('app_explore_trips') }}" class="nav-link {{ app.request.attributes.get('_route') == 'app_explore_trips' ? 'active' : '' }}">
               {{ 'navigation.explore_trips'|trans }}
             </a>
-            <a href="{{ path('app_planner') }}" class="nav-link {{ app.request.attributes.get('_route') == 'app_planner' ? 'active' : '' }}">
+            <a href="{{ path('app_roadtrip_new') }}" class="nav-link {{ app.request.attributes.get('_route') == 'app_roadtrip_new' ? 'active' : '' }}">
               {{ 'navigation.trip_planner'|trans }}
             </a>
             <a href="{{ path('app_about') }}" class="nav-link {{ app.request.attributes.get('_route') == 'app_about' ? 'active' : '' }}">
@@ -90,7 +90,7 @@
                 <span class="font-semibold text-4xl tracking-tight self-start flex-grow">{{ 'app.logo'|trans }}</span>
                 <div class="text-base lg:flex-grow">
                   <a href="{{ path('app_explore_trips') }}" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.explore_trips'|trans }}</a>
-                  <a href="{{ path('app_planner') }}" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.trip_planner'|trans }}</a>
+                  <a href="{{ path('app_roadtrip_new') }}" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mr-4 mt-3">{{ 'navigation.trip_planner'|trans }}</a>
                   <a href="{{ path('app_about') }}" class="block lg:inline-block lg:mt-0 text-primary duration-700 hover:underline mt-3">{{ 'navigation.about'|trans }}</a>
                 </div>
               </div>
@@ -110,6 +110,4 @@
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
-
-
 </html>

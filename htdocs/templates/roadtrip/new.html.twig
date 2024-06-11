@@ -1,12 +1,12 @@
 {# templates/roadtrip/planner.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block head %}
-{% endblock %}
+{% block title %}{{ 'roadtrip.new.page_title'|trans|raw }}{% endblock %}
 
 {% block body %}
     <div class="p-10 md:p-16 my-12 border-2 border-green dark:border-orange rounded-20">
-        <h1 class="mb-7 text-start">Create your own road trip</h1>
+        <h1 class="mb-3 text-start">{{ 'roadtrip.new.heading'|trans }}</h1>
+        <p class="mb-20 text-start">{{ 'roadtrip.new.description'|trans }}</p>
 
         {{ form_start(form, { 'attr': { 'class': 'space-y-6' } }) }}
 
