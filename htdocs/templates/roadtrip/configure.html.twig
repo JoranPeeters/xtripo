@@ -4,12 +4,25 @@
 {% block title %}Configure Roadtrip{% endblock %}
 
 {% block body %}
+
+    <!-- flash_messages.html.twig -->
+    <div class="flex flex-col">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert {{ label }} mb-6" role="alert">
+                    {{ message }}
+                    <button type="button" class="close-button" data-dismiss="alert" aria-label="Close">&times;</button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+
     <h1 class="mt-36">{{ roadtrip.title ?? 'My roadtrip to ' ~ country.name }}</h1>
         <p>Start Date: {{ roadtrip.startDate|date('Y-m-d') }}</p>
         <p>End Date: {{ roadtrip.endDate|date('Y-m-d') }}</p>
         <h2 class="mt-36">{{ country.name }}</h2>
 
-        {% for place in nearbyPlaces %}
+        {% for place in places %}
             <h3>{{ place.name }}</h3>
             <p>{{ place.description }}</p>
             <div class="w-14">

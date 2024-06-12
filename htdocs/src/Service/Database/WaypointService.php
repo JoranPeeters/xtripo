@@ -8,7 +8,8 @@ use App\Entity\Roadtrip;
 use App\Repository\WaypointRepository;
 use App\Repository\CityRepository;
 use App\Service\OpenAI\OpenAIService;
-use Psr\Log\LoggerInterface;
+use App\Service\Logger\LoggerService;
+use Doctrine\ORM\EntityManagerInterface;
 
 class WaypointService
 {
@@ -16,8 +17,16 @@ class WaypointService
         private readonly WaypointRepository $waypointRepository,
         private readonly CityRepository $cityRepository,
         private readonly OpenAIService $openAIService,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerService $logger,
+        private readonly EntityManagerInterface $entityManager,
     ) {
+    }
+
+    public function generateRoadtripAndSaveWaypoints(Roadtrip $roadtrip): void
+    {
+        $this->generateAndSaveWaypoints($roadtrip);
+        $this->entityManager->refresh($roadtrip);
+        $this->logger->logMessage('OpenAi - Generated roadtrip and added all waypoints to: ' . $roadtrip->getId());
     }
 
     public function saveWaypoints(array $waypoints, Roadtrip $roadtrip): void
@@ -63,14 +72,8 @@ class WaypointService
 
     public function generateAndSaveWaypoints(Roadtrip $roadtrip): void
     {
-        $startTime = microtime(true);
-
-        $roadtripWaypoints = $this->openAIService->generateRoadtrip($roadtrip);
-
-        $endTime = microtime(true);
-        $duration = $endTime - $startTime;
-        $this->logger->info('OpenAI API call + flushing database duration: ' . $duration . ' seconds');
         
+        $roadtripWaypoints = $this->openAIService->generateRoadtrip($roadtrip);
         $this->saveWaypoints($roadtripWaypoints, $roadtrip);
 
     }
@@ -78,23 +81,16 @@ class WaypointService
     public function getFirstWaypointsOfEachDay(array $waypoints): array
     {
         $firstWaypoints = [];
-        $waypointsByDay = [];
-
+        
         foreach ($waypoints as $waypoint) {
             $day = $waypoint->getDay();
-            if (!isset($waypointsByDay[$day])) {
-                $waypointsByDay[$day] = [];
+            // If not added a waypoint for this day yet, or if this waypoint was created earlier than the currently stored one
+            if (!isset($firstWaypoints[$day]) || $waypoint->getCreatedAt() < $firstWaypoints[$day]->getCreatedAt()) {
+                $firstWaypoints[$day] = $waypoint;
             }
-            $waypointsByDay[$day][] = $waypoint;
         }
-
-        foreach ($waypointsByDay as $day => $waypointsForDay) {
-            usort($waypointsForDay, function($a, $b) {
-                return $a->getCreatedAt() <=> $b->getCreatedAt(); // Using getCreatedAt method to sort waypoints
-            });
-            $firstWaypoints[] = $waypointsForDay[0];
-        }
-
+    
+        $this->logger->logMessage('Database - Found ' . count($firstWaypoints) . ' first waypoints of each day.');
         return $firstWaypoints;
     }
 }

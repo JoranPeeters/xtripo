@@ -6,7 +6,9 @@ namespace App\Service\OpenAI;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use App\Entity\Roadtrip;
 use App\Repository\RoadtripTypeRepository;
-use Psr\Log\LoggerInterface;
+use App\Service\Logger\LoggerService;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class OpenAIService
 {
@@ -15,7 +17,8 @@ class OpenAIService
     public function __construct(
         HttpClientInterface $client,
         private readonly RoadtripTypeRepository $roadtripTypeRepository,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerService $logger,
+        private readonly TranslatorInterface $translator,
     )
     {
         $this->client = $client;
@@ -63,7 +66,8 @@ class OpenAIService
             
             The road trip should be unique and unforgettable, incorporating both popular attractions and hidden gems that people don\'t expect. taking into account the user road trip types.
             These hidden gems should be lesser-known but highly recommended spots that will make the trip truly special. You can also choose how many waypoints there will be in one day based on the user information.
-            Ensure the road trip follows the most efficient route, avoiding any backtracking or repeated paths for the traveler.
+            Ensure the road trip follows the most efficient route, avoiding any backtracking or repeated paths for the traveler. If the user specifies a starting point from home, make sure the first and last 
+            waypoint are the coordinates of this city.
             
             Please provide the road trip plan as a JSON array of waypoints.
             You can determine how many waypoints per day, but keep it reasonable for a day\'s travel.  
@@ -108,61 +112,81 @@ class OpenAIService
                     ]
                   }';
 
-            $userPrompt = [
-                'country' => $roadtrip->getCountry()->getName(),
-                'travelers' => $roadtrip->getTravelers(),
-                'start_date' => $roadtrip->getStartDate()->format('Y-m-d'),
-                'end_date' => $roadtrip->getEndDate()->format('Y-m-d'),
-                'rent_car' => $roadtrip->getRentCar() ? 'yes' : 'no',
-                'vehicle' => $roadtrip->getVehicle() ? $roadtrip->getVehicle()->getVehicleType() : null,
-                'cost_preferences' => $roadtrip->getCostPreferences(),
-                'distance' => $roadtrip->getDistance(),
-                'roadtrip_types' => $roadtripTypes,
-            ];
-        
-            $prompt = "The user has specified preferences for the following road trip types: " . $roadtripTypes . ". 
-            Please ensure that the generated waypoints align with these interests to create an interest-based road trip.\n\nUser-provided road trip data: " . json_encode($userPrompt, JSON_PRETTY_PRINT);
-        
-            return $this->openAiApiCall($prompt, $model, $systemPrompt, $temperature);   
+        $userPrompt = [
+            'starting_point' => $roadtrip->getStartingPoint()->getName(),
+            'country' => $roadtrip->getCountry()->getName(),
+            'travelers' => $roadtrip->getTravelers(),
+            'start_date' => $roadtrip->getStartDate()->format('Y-m-d'),
+            'end_date' => $roadtrip->getEndDate()->format('Y-m-d'),
+            'starting_from_home' => $roadtrip->getStartFromHome() ? 'yes' : 'no',
+            'rent_car' => $roadtrip->getRentCar() ? 'yes' : 'no',
+            'vehicle' => $roadtrip->getVehicle() ? $roadtrip->getVehicle()->getVehicleType() : null,
+            'cost_preferences' => $roadtrip->getCostPreferences(),
+            'distance' => $roadtrip->getDistance(),
+            'roadtrip_types' => $roadtripTypes,
+        ];
+    
+        $prompt = "The user has specified preferences for the following road trip types: " . $roadtripTypes . ". 
+        Please ensure that the generated waypoints align with these interests to create an interest-based road trip.\n\nUser-provided road trip data: " . json_encode($userPrompt, JSON_PRETTY_PRINT);
+    
+        return $this->openAiApiCall($prompt, $model, $systemPrompt, $temperature);   
     }
 
     public function openAiApiCall(string $prompt, string $model, string $systemPrompt, float $temperature): array
     {
-        $response = $this->client->request('POST', 'https://api.openai.com/v1/chat/completions', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $_ENV['OPENAI_API_KEY'],
-                'Content-Type' => 'application/json',
-            ],
-            'json' => [
-                'model' => $model,
-                'messages' => [
-                    [
-                        'role' => 'system',
-                        'content' => $systemPrompt
-                    ],
-                    [
-                        'role' => 'user',
-                        'content' => $prompt
-                    ],
+        try {
+            $response = $this->client->request('POST', 'https://api.openai.com/v1/chat/completions', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $_ENV['OPENAI_API_KEY'],
+                    'Content-Type' => 'application/json',
                 ],
-                'temperature' => $temperature,
-            ],
-        ]);
-    
-        $responseData = $response->toArray();
-        $jsonArrayString = $responseData['choices'][0]['message']['content'] ?? '';
-    
-        // Ensure valid JSON format
-        $jsonArrayString = $this->ensureJsonFormat($jsonArrayString);
-    
-        // Parse the JSON array string to a PHP array
-        $data = json_decode($jsonArrayString, true);
-    
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \RuntimeException('Invalid JSON response from OpenAI: ' . json_last_error_msg());
+                'json' => [
+                    'model' => $model,
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => $systemPrompt
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => $prompt
+                        ],
+                    ],
+                    'temperature' => $temperature,
+                ],
+            ]);
+
+            if ($response->getStatusCode() !== 200) {
+                throw new HttpException($response->getStatusCode(), 'OpenAI API call failed with status code ' . $response->getStatusCode());
+            }
+
+            $responseData = $response->toArray();
+            $jsonArrayString = $responseData['choices'][0]['message']['content'] ?? '';
+
+            // Ensure valid JSON format
+            $jsonArrayString = $this->ensureJsonFormat($jsonArrayString);
+
+            // Parse the JSON array string to a PHP array
+            $data = json_decode($jsonArrayString, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \RuntimeException('Invalid JSON response from OpenAI: ' . json_last_error_msg());
+            }
+
+            return $data;
+
+        } catch (\Throwable $e) {
+
+            $this->logger->logError('OpenAI API call failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'prompt' => $prompt,
+                'model' => $model,
+                'systemPrompt' => $systemPrompt,
+                'temperature' => $temperature
+            ]);
+
+            throw $e;
         }
-    
-        return $data;
     }
 
     private function ensureJsonFormat(string $content): string
@@ -189,8 +213,7 @@ class OpenAIService
             return $jsonContent;
         }
 
-        // If still not valid, log an error and return an empty JSON object as a fallback
-        error_log('Failed to ensure valid JSON format for content: ' . $content);
+        $this->logger->logError('Invalid JSON format from OpenAI API response: ' . json_last_error_msg(), ['content' => $content]);
         return '{}';
     }
 }

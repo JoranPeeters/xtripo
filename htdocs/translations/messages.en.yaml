@@ -207,6 +207,13 @@ profile:
 message:
   roadtrip:
     created: "Road trip successfully created!"
+    error: "An error occurred while creating the road trip. Please try again later."
+
+  tripadvisor:
+    fetched: "TripAdvisor data successfully fetched!"
+  
+  waypoints:
+    error: "No Waypoints Found for this Roadtrip."
 
 form:
   login:

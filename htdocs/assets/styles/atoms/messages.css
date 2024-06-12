@@ -1,0 +1,23 @@
+.success{
+    @apply text-success border border-success rounded-8  w-full py-4 px-4  text-start mb-8
+}
+
+.error{
+    @apply text-error border border-error rounded-8 w-full py-4 px-4  text-start mb-8
+}
+
+.info{
+    @apply text-primary border border-primary rounded-8  w-full py-4 px-4 text-start mb-8
+}
+
+.warning{
+    @apply text-dark-orange border border-dark-orange rounded-8  w-full py-4 px-4 text-start mb-8
+}
+
+.close-button {
+    @apply absolute top-0 right-0 m-3 text-2xl;
+}
+
+.alert {
+    @apply p-4 rounded-8 mb-4 relative transition-opacity duration-500 ease-in-out;
+}

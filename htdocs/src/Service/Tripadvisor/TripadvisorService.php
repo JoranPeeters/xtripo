@@ -5,6 +5,8 @@ namespace App\Service\Tripadvisor;
 use App\Repository\PlaceRepository;
 use App\Entity\Roadtrip;
 use App\Repository\RoadtripRepository;
+use App\Service\Tripadvisor\TripadvisorNearbyPlacesService;
+use App\Service\Logger\LoggerService;
 
 class TripadvisorService
 {
@@ -12,37 +14,38 @@ class TripadvisorService
         private readonly TripadvisorNearbyPlacesService $tripadvisorNearbyPlacesService,
         private readonly PlaceRepository $placeRepository,
         private readonly RoadtripRepository $roadtripRepository,
+        private readonly TripadvisorPlaceDetailService $tripadvisorPlaceDetailService,
+        private readonly LoggerService $logger,
     ) {
     }
 
     public function fetchAndSaveAllNearbyPlaces(array $waypoints, int $roadtripId): void
     {
         $coordinates = $this->getLatitudeLongitude($waypoints);
-        $nearbyPlaces = $this->getNearbyPlaces($coordinates);
-        $this->saveAllNearbyPlaces($nearbyPlaces, $roadtripId);
+        $nearbyPlaceIds = $this->getNearbyPlaceIds($coordinates);
+        $newPlaceIds = $this->checkForExistingPlacesAndSetToRoadtrip($nearbyPlaceIds, $roadtripId);
+        $newPlaceDetails = $this->tripadvisorPlaceDetailService->getPlaceDetails($newPlaceIds);
+        $this->saveAllNearbyPlaces($newPlaceDetails, $roadtripId);
     }
 
-    private function saveAllNearbyPlaces(array $nearbyPlaces, int $roadtripId): void
+    private function saveAllNearbyPlaces(array $newPlaces, int $roadtripId): void
     {
         $roadtrip = $this->roadtripRepository->find($roadtripId);
-        dd($roadtrip);
-        foreach ($nearbyPlaces as $nearbyPlace) {
-            foreach ($nearbyPlace as $place) {
-                $existingPlace = $this->placeRepository->findOneBy(['place_id' => $place['place_id']]);
-                if(!$existingPlace) {
-                    $this->placeRepository->savePlace($place, $place['category'], $roadtrip);
-                }
-            }
+        foreach ($newPlaces as $newPlace) {
+            $this->placeRepository->savePlace($newPlace, $roadtrip);
         }
+
+        $this->logger->logMessage('Tripadvisor - Saved ' . count($newPlaces) . ' new places to roadtrip with ID: ' . $roadtripId);
+        $this->placeRepository->flush();
     }
 
     public function getAllNearbyPlaces(Roadtrip $roadtrip): array
     {
         $allNearbyPlaces = $roadtrip->getPlaces();
 
-        if (empty($nearbyPlaces)) {
-            $this->fetchAndSaveAllNearbyPlaces($roadtrip->getWaypoints()->toarray(), $roadtrip->getId());
-            $allNearbyPlaces = $roadtrip->getPlaces();
+        if(!$allNearbyPlaces) {
+            throw new \Exception('No nearby places found for roadtrip with ID: ' . $roadtrip->getId());
+            $this->logger->logError('No nearby places found for roadtrip with ID: ' . $roadtrip->getId());
         }
 
         return $allNearbyPlaces->toArray();
@@ -61,13 +64,47 @@ class TripadvisorService
         return $latLongCoordinatesWaypoints;
     }
 
-    private function getNearbyPlaces(array $coordinates): array
+    private function getNearbyPlaceIds(array $coordinates): array
     {
-        $nearbyPlaces = [];
+        $nearbyPlaceIds = [];
         foreach ($coordinates as $latLongCoordinate) {
-            $nearbyPlaces[] = $this->tripadvisorNearbyPlacesService->searchNearbyPlaces($latLongCoordinate, 'en');
+            $nearbyPlaceIds[] = $this->tripadvisorNearbyPlacesService->searchNearbyPlaces($latLongCoordinate, 'en');
         }
 
-        return $nearbyPlaces;
+        return $nearbyPlaceIds;
+    }
+
+    private function checkForExistingPlacesAndSetToRoadtrip(array $nearbyPlaceIds, int $roadtripId): array
+    {
+        $newPlaceIds = [];
+        $existingPlaces = [];
+        $roadtrip = $this->roadtripRepository->find($roadtripId);
+
+        if (!$roadtrip) {
+            throw new \Exception("Roadtrip with ID $roadtripId not found.");
+            $this->logger->logError('Roadtrip with ID ' . $roadtripId . ' not found.');
+        }
+
+        foreach ($nearbyPlaceIds as $day => $categories) {
+            foreach($categories as $category => $placeIds) {
+                foreach($placeIds as $placeId) {
+                    $existingPlace = $this->placeRepository->findOneBy(['place_id' => $placeId]);
+
+                    if (!$existingPlace) {
+                        $newPlaceIds[$day][$category][] = $placeId;
+
+                    } else{
+                        $existingPlaces[] = $existingPlace;
+                        $roadtrip->addPlace($existingPlace);
+                    }
+                }
+            }
+        }
+        
+        $this->logger->logMessage('Tripadvisor - Found: ' . count($newPlaceIds) . ' new places and ' . count($existingPlaces) . ' existing places.');
+        $this->roadtripRepository->save($roadtrip);
+        $this->roadtripRepository->flush();
+
+        return $newPlaceIds;
     }
 }

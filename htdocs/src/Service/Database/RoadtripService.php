@@ -7,6 +7,7 @@ use App\Repository\RoadtripRepository;
 use App\Repository\CountryRepository;
 use App\Repository\RoadtripTypeRepository;
 use App\Entity\User;
+use App\Service\Logger\LoggerService;
 
 class RoadtripService
 {
@@ -14,6 +15,7 @@ class RoadtripService
         private readonly RoadtripRepository $roadtripRepository,
         private readonly CountryRepository $countryRepository, 
         private readonly RoadtripTypeRepository $roadtripTypeRepository,
+        private readonly LoggerService $logger,
     ) {
     }
 
@@ -30,5 +32,12 @@ class RoadtripService
 
         $this->countryRepository->save($country);
         $this->roadtripRepository->save($roadtrip);
+    }
+
+    public function handleNewRoadtrip(Roadtrip $roadtrip, User $user): void
+    {
+        $this->saveRoadtripAndUpdatePopularity($roadtrip, $user);
+        $this->roadtripRepository->flush();
+        $this->logger->logMessage('New roadtrip created: ' . $roadtrip->getId() . ' by user: ' . $user->getId());
     }
 }

@@ -17,9 +17,11 @@
   @import './atoms/logo.css';
   @import './atoms/forms.css';
   @import './atoms/navigation.css';
+  @import './atoms/messages.css';
 
   /*animations*/
   @import './animations/animations.css';
+  @import './animations/loader.css';
 
   /* Google Maps */
   @import './googleMaps/googleMap.css';

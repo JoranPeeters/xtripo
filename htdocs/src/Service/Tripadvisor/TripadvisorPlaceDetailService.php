@@ -4,30 +4,39 @@ namespace App\Service\Tripadvisor;
 
 use App\Service\Tripadvisor\TripadvisorApiService;
 use App\Service\Tripadvisor\Formatter\PlaceFormatter;
+use App\Repository\PlaceRepository;
+use App\Service\Logger\LoggerService;
 
 class TripadvisorPlaceDetailService
 {
     public function __construct(
         private readonly TripadvisorApiService $tripadvisorApiService,
         private readonly PlaceFormatter $placeFormatter,
+        private readonly PlaceRepository $placeRepository,
+        private readonly LoggerService $logger,
     ) {}
 
-    public function getPlaceDetails(array $nearbyPlaceIds): array
+    public function getPlaceDetails(array $newPlaceIds): array
     {
         $placeDetails = [];
-        foreach ($nearbyPlaceIds as $category => $placeIds) {
-            $placeIds = array_slice($placeIds, 0, 4); // Limit to 4 API calls per category
-            foreach ($placeIds as $placeId) {
-                $details = $this->getPlaceDetail($category, $placeId);
-                if ($details) {
-                    $placeDetails[] = $this->placeFormatter->format($details);
+    
+        foreach ($newPlaceIds as $day => $categories) {
+            foreach ($categories as $category => $placeIds) {
+                $limitedPlaceIds = array_slice($placeIds, 0, 2);
+                foreach ($limitedPlaceIds as $placeId) {
+                    $details = $this->getPlaceDetail($category, $placeId);
+                    if ($details) {
+                        $placeDetails[] = $this->placeFormatter->format($details);
+                    }
                 }
             }
         }
-
+    
+        $this->logger->logMessage('Tripadvisor - Fetched ' . count($placeDetails) . ' place details from Tripadvisor API');
         return $placeDetails;
     }
-
+    
+    
     private function getPlaceDetail(string $category, string $placeId): array
     {
         $results = $this->tripadvisorApiService->makeApiRequest('https://api.content.tripadvisor.com/api/v1/location/' . $placeId . '/details', [
@@ -35,10 +44,6 @@ class TripadvisorPlaceDetailService
             'language' => 'en',
             'currency' => 'EUR',
         ]);
-
-        if (!isset($results)) {
-            return [];
-        }
         
         $details = $results;
         $details['category'] = $category; // Add category to the details

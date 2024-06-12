@@ -13,6 +13,9 @@ import './googleMaps/demo';
 import './googleMaps/roadtripConfigurator';
 
 import './mode/themeSwitcher.js';
+import './mode/messages.js';
+
+import './loader/loader.js';
 
 console.log('app.js loaded! 🎉');
 

@@ -142,6 +142,9 @@ class RoadtripFormType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
                 'required' => false,
+                'constraints' => [
+                    new Callback([$this, 'validateRoadtripTypes']),
+                ],
             ])
 
             ->add('save', SubmitType::class, [
@@ -170,6 +173,15 @@ class RoadtripFormType extends AbstractType
                     ->atPath('end_date')
                     ->addViolation();
             }
+        }
+    }
+
+    public function validateRoadtripTypes($object, ExecutionContextInterface $context): void
+    {
+        if (count($object) > 3) {
+            $context->buildViolation('form.roadtrip.roadtrip_types.error')
+                ->atPath('roadtrip_types')
+                ->addViolation();
         }
     }
 

@@ -3,6 +3,7 @@
 namespace App\Service\Tripadvisor;
 
 use App\Repository\PlaceRepository;
+use App\Service\Logger\LoggerService;
 
 class TripadvisorNearbyPlacesService
 {
@@ -12,35 +13,31 @@ class TripadvisorNearbyPlacesService
         private readonly TripadvisorApiService $tripadvisorApiService,
         private readonly TripadvisorPlaceDetailService $tripadvisorPlaceDetailService,
         private readonly PlaceRepository $placeRepository,
+        private readonly LoggerService $logger,
     ) {}
 
     public function searchNearbyPlaces(string $latLongCoordinate, string $language): array
     {
         $nearbyPlaces = [
-            'restaurant' => $this->searchNearbyCategory($latLongCoordinate, 'restaurants', $language),
-            'attraction' => $this->searchNearbyCategory($latLongCoordinate, 'attractions', $language),
-            'hotel' => $this->searchNearbyCategory($latLongCoordinate, 'hotels', $language),
-            'geo' => $this->searchNearbyCategory($latLongCoordinate, 'geos', $language),
+            'restaurants' => $this->searchNearbyCategory($latLongCoordinate, 'restaurants', $language),
+            'attractions' => $this->searchNearbyCategory($latLongCoordinate, 'attractions', $language),
+            'hotels' => $this->searchNearbyCategory($latLongCoordinate, 'hotels', $language),
+            'geos' => $this->searchNearbyCategory($latLongCoordinate, 'geos', $language),
         ];
 
         $nearbyPlaceIds = $this->getNearbyPlaceIds($nearbyPlaces);
-        $nearbyPlaceDetails = $this->tripadvisorPlaceDetailService->getPlaceDetails($nearbyPlaceIds);
+        $this->logger->logMessage('Tripadvisor - Found: ' 
+        . count($nearbyPlaceIds['restaurants'] ?? []) . ' restaurants ' 
+        . count($nearbyPlaceIds['attractions'] ?? []) . ' attractions ' 
+        . count($nearbyPlaceIds['hotels'] ?? []) . ' hotels ' 
+        .  count($nearbyPlaceIds['geos'] ?? []) . ' geos ' .' nearby: ' 
+        . $latLongCoordinate);
 
-        return $nearbyPlaceDetails;
+        return $nearbyPlaceIds;
     }
 
     private function searchNearbyCategory(string $latLongCoordinate, string $category, string $language): array
     {
-        [$latitude, $longitude] = explode(',', $latLongCoordinate);
-
-        // Check existing places in the database based on proximity
-        $existingPlaces = $this->placeRepository->findNearbyPlaces((float)$latitude, (float)$longitude, $category, self::SEARCH_RADIUS_KM);
-
-        if (count($existingPlaces) > 0) {
-            return $existingPlaces;
-        }
-
-        // If no existing places found, make an API request
         $results = $this->getTripAdvisorNearbyPlaces($latLongCoordinate, $category, $language);
 
         return $results ?? [];
@@ -57,6 +54,7 @@ class TripadvisorNearbyPlacesService
             'category' => $category,
         ]);
 
+        
         return $results['data'] ?? [];
     }
 

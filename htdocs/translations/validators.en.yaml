@@ -20,3 +20,6 @@ form:
       error_1: "End date is required" 
       error_2: "The date cannot be in the past."
       error_3: "The road trip cannot be longer than 7 days."
+
+    roadtrip_types:
+      error: "You can select a maximum of 3 road trip types."

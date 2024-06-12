@@ -18,9 +18,10 @@ use App\Service\Database\RoadtripService;
 use App\Service\Tripadvisor\TripadvisorService;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
-use Psr\Log\LoggerInterface;
-use Monolog\Logger;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Service\Logger\LoggerService;
+use App\Service\Timer\TimerService;
+
 
 class RoadtripController extends AbstractController
 {
@@ -32,45 +33,48 @@ class RoadtripController extends AbstractController
         private readonly WaypointService $waypointService,
         private readonly GoogleMapsService $googleMapsService,
         private readonly TripadvisorService $tripadvisorService,
-        private readonly LoggerInterface $logger,
         private readonly RoadtripService $roadtripService,
         private readonly TranslatorInterface $translator,
+        private readonly LoggerService $logger,
+        private readonly TimerService $timerService,
     ) {}
 
     #[Route('/roadtrip/new', name: 'app_roadtrip_new')]
-    public function new(RoadtripRepository $roadtripRepository, RoadtripService $roadtripService, Request $request): Response
+    public function new(RoadtripService $roadtripService, WaypointService $waypointService , TimerService $timerService, Request $request): Response
     {
-        $logger = new Logger('name'); 
+        
         $this->denyAccessUnlessGranted('ROLE_USER');
         $roadtrip = new Roadtrip();
         $form = $this->createForm(RoadtripFormType::class, $roadtrip);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $startTime = microtime(true);
 
-            $roadtripService->saveRoadtripAndUpdatePopularity($roadtrip, $this->getUser());
-            $roadtripRepository->flush();
-            $this->addFlash('success', $this->translator->trans('message.roadtrip.created'));
-            $this->logger->info('New roadtrip created', ['roadtrip' => $roadtrip]);
+            $startOpenAi= microtime(true);
+            $startOveral = microtime(true);
 
-           
+            try {
 
-            $this->waypointService->generateAndSaveWaypoints($roadtrip);
+                $roadtripService->handleNewRoadtrip($roadtrip, $this->getUser());
+                $waypointService->generateRoadtripAndSaveWaypoints($roadtrip);
+                $timerService->calculateTimeForGeneratedroadtrip($startOpenAi);
 
+                $startTripadvisor = microtime(true);
+                $firstWaypoints = $waypointService->getFirstWaypointsOfEachDay($roadtrip->getWaypoints()->toArray());
+                $this->tripadvisorService->fetchAndSaveAllNearbyPlaces($firstWaypoints, $roadtrip->getId());
+                $timerService->calculateTimeForTripadvisorApi($startTripadvisor);
 
-            $endTime = microtime(true);
-            $duration = $endTime - $startTime;
-            $this->logger->info('OpenAI API call + flushing database duration: ' . $duration . ' seconds');
-            return $this->render('home/index.html.twig', []);
+                $timerService->calculateOveralTimeForAllRequests($startOveral);
+                
+                $this->addFlash('success', $this->translator->trans('message.roadtrip.created'));
+                $this->addFlash('success', $this->translator->trans('message.tripadvisor.fetched'));
 
-            //$this->entityManager->refresh($roadtrip);
-            //$waypoints = $roadtrip->getWaypoints();
+            } catch (\Throwable $e) {
+                $this->addFlash('error', $this->translator->trans('message.roadtrip.error'));
+                return $this->redirectToRoute('app_roadtrip_new');
+            }
 
-            //$firstWaypoints = $this->waypointService->getFirstWaypointsOfEachDay($waypoints->toArray());
-            //$this->tripadvisorService->fetchAndSaveAllNearbyPlaces($firstWaypoints, $roadtrip->getId());
-
-            // Redirect to the configure page with the roadtrip and waypoints
+            // Redirect to the configure page with the roadtrip and waypoints THIS IS THE FINAL STEP!!!!!
             return $this->redirectToRoute('app_roadtrip_configure', [
                 'id' => $roadtrip->getId()
             ]);
@@ -81,27 +85,40 @@ class RoadtripController extends AbstractController
         ]);
     }
 
-    #[Route('/roadtrip/{id}/configure', name: 'app_roadtrip_configure')]
-    public function configure(Roadtrip $roadtrip, Security $security, TripadvisorService $tripadvisorService, LoggerInterface $logger): Response
+    #[Route('/roadtrip/debug', name: 'app_roadtrip_debug')]
+    public function debugRoadtrip(WaypointService $waypointService): Response
     {
-        // Check if the user is logged in
-        $user = $security->getUser();
-        if (!$user) {
-            throw new AccessDeniedException('You must be logged in to access this page.');
+        $roadtrip = $this->roadtripRepository->find(205);
+
+        if (!$roadtrip) {
+            throw $this->createNotFoundException('No roadtrip found for id 255');
         }
-    
-        // Check if the road trip belongs to the logged-in user
-        if ($roadtrip->getUser() !== $user) {
+        
+        //For debugging delete later
+        return $this->redirectToRoute('app_home');
+
+    }
+
+    #[Route('/roadtrip/{id}/configure', name: 'app_roadtrip_configure')]
+    public function configure(Roadtrip $roadtrip, Security $security, TripadvisorService $tripadvisorService): Response
+    {
+
+        $user = $security->getUser();
+        if (!$user || $roadtrip->getUser() !== $user) {
             throw new AccessDeniedException('You do not have permission to access this road trip.');
         }
     
         try {
+
             $waypoints = $roadtrip->getWaypoints();
+
             if (empty($waypoints)) {
                 throw new \Exception('No waypoints found for this roadtrip.');
+                $this->logger->logError('No waypoints found for roadtrip with ID ' . $roadtrip->getId());
+                $this->addFlash('error', 'message.waypoints.error');
             }
 
-            $nearbyPlaces = $tripadvisorService->getAllNearbyPlaces($roadtrip);
+            $allNearbyPlaces = $tripadvisorService->getAllNearbyPlaces($roadtrip);
 
             // Calculate the number of days for the roadtrip
             $startDate = $roadtrip->getStartDate();
@@ -113,10 +130,10 @@ class RoadtripController extends AbstractController
                 'country' => $roadtrip->getCountry(),
                 'waypoints' => $roadtrip->getWaypoints(),
                 'days' => $days,
-                'nearbyPlaces' => $nearbyPlaces,
+                'places' => $allNearbyPlaces,
             ]);
         } catch (\Exception $e) {
-            $logger->error('Error in configure method', ['exception' => $e]);
+            $this->logger->logError('Error in configure method', ['exception' => $e]);
             return new Response('An error occurred: ' . $e->getMessage(), 500);
         }
     }
