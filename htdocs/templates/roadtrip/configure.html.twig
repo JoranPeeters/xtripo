@@ -5,11 +5,10 @@
 
 {% block body %}
 
-    <!-- flash_messages.html.twig -->
     <div class="flex flex-col">
         {% for label, messages in app.flashes %}
             {% for message in messages %}
-                <div class="alert {{ label }} mb-6" role="alert">
+                <div class="alert {{ label }} mt-6" role="alert">
                     {{ message }}
                     <button type="button" class="close-button" data-dismiss="alert" aria-label="Close">&times;</button>
                 </div>
@@ -17,10 +16,51 @@
         {% endfor %}
     </div>
 
-    <h1 class="mt-36">{{ roadtrip.title ?? 'My roadtrip to ' ~ country.name }}</h1>
-        <p>Start Date: {{ roadtrip.startDate|date('Y-m-d') }}</p>
-        <p>End Date: {{ roadtrip.endDate|date('Y-m-d') }}</p>
-        <h2 class="mt-36">{{ country.name }}</h2>
+    <div class="flex flex-col mb-20">
+
+        <h1 class="mt-20">{{ roadtrip.title ?? 'My roadtrip to ' ~ country.name }}</h1>
+
+        <div class="flex flex-row gap-3">
+            <p>{{ roadtrip.startDate|date('Y-m-d') }}</p>
+            <p>-</p>
+            <p>{{ roadtrip.endDate|date('Y-m-d') }}</p>
+        </div>
+
+        <div class="flex flex-wrap gap-4 mt-10">
+            {% for day in days %}
+                <button class="btn btn-green-outlined {{ day == 1 ? 'active' : '' }}" data-day="{{ day }}">Day {{ day }}</button>
+            {% endfor %}
+        </div>
+
+        <div class="flex flex-row mt-10 gap-10" id="waypoints-container">
+            {% for waypoint in waypoints %}
+                <div class="flex flex-col p-6 border-2 border-orange rounded-8 shadow-md waypoint w-1/2 flex-wrap" data-day="{{ waypoint.day }}" style="{{ waypoint.day != 1 ? 'display:none;' : '' }}">
+                    <h2>{{ waypoint.locationName }}</h2>
+                    <p>{{ waypoint.description }}</p>
+                    <p class="flex flex-row items-center gap-2 text-primary mt-4 p-2 px-4 rounded-8 bg-dark-orange"><i class="fa-solid fa-circle-info"></i>{{ waypoint.advice }}</p>
+                    <p class="mt-2">Best Times to visit: {{ waypoint.bestHours }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="flex flex-row p-10 border border-orange rounded-20 gap-10">
+
+        <div class="flex flex-col gap-6">
+            <button class="btn btn-orange-outlined active:bg-orange">Activities</button>
+            <button class="btn btn-orange-outlined">Accommodations</button>
+            <button class="btn btn-orange-outlined">Restaurants</button>
+            <button class="btn btn-orange-outlined">Useful Tips</button>
+        </div>
+
+        <div class="flex flex-col">
+            <h3>Here need to come the text from the burron that is selected</h3>
+
+        </div>
+
+    </div>
+
+
 
         {% for place in places %}
             <h3>{{ place.name }}</h3>

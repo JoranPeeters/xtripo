@@ -4,10 +4,11 @@ namespace App\Service\Tripadvisor\Formatter;
 
 class PlaceFormatter
 {
-    public static function format(array $details): array
+    public static function format(array $details, int $day): array
     {
         return [
             'name' => $details['name'] ?? '',
+            'day' => $day ?? '',	
             'description' => $details['description'] ?? '',
             'website_url' => $details['website'] ?? '',
             'tripadvisor_url' => $details['web_url'] ?? '',

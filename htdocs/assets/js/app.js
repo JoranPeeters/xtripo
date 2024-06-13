@@ -17,5 +17,7 @@ import './mode/messages.js';
 
 import './loader/loader.js';
 
+import './roadtrip/configurePage.js';
+
 console.log('app.js loaded! 🎉');
 

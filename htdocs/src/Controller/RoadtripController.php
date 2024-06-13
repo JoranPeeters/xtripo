@@ -74,7 +74,6 @@ class RoadtripController extends AbstractController
                 return $this->redirectToRoute('app_roadtrip_new');
             }
 
-            // Redirect to the configure page with the roadtrip and waypoints THIS IS THE FINAL STEP!!!!!
             return $this->redirectToRoute('app_roadtrip_configure', [
                 'id' => $roadtrip->getId()
             ]);
@@ -83,20 +82,6 @@ class RoadtripController extends AbstractController
         return $this->render('roadtrip/new.html.twig', [
             'form' => $form->createView(),
         ]);
-    }
-
-    #[Route('/roadtrip/debug', name: 'app_roadtrip_debug')]
-    public function debugRoadtrip(WaypointService $waypointService): Response
-    {
-        $roadtrip = $this->roadtripRepository->find(205);
-
-        if (!$roadtrip) {
-            throw $this->createNotFoundException('No roadtrip found for id 255');
-        }
-        
-        //For debugging delete later
-        return $this->redirectToRoute('app_home');
-
     }
 
     #[Route('/roadtrip/{id}/configure', name: 'app_roadtrip_configure')]
@@ -120,16 +105,17 @@ class RoadtripController extends AbstractController
 
             $allNearbyPlaces = $tripadvisorService->getAllNearbyPlaces($roadtrip);
 
-            // Calculate the number of days for the roadtrip
             $startDate = $roadtrip->getStartDate();
             $endDate = $roadtrip->getEndDate();
-            $days = $startDate->diff($endDate)->days + 1; // Adding 1 to include both start and end date
-    
+            $daysCount = $startDate->diff($endDate)->days + 1;
+
+            dd($allNearbyPlaces);
+            
             return $this->render('roadtrip/configure.html.twig', [
                 'roadtrip' => $roadtrip,
                 'country' => $roadtrip->getCountry(),
                 'waypoints' => $roadtrip->getWaypoints(),
-                'days' => $days,
+                'days' => range(1, (int)$daysCount),
                 'places' => $allNearbyPlaces,
             ]);
         } catch (\Exception $e) {

@@ -182,6 +182,7 @@ explore_trips:
 planner:
   page_title: "planner"
   heading: "Create your own road trip"
+  cancel: "Cancel"
 
 register:
   page_title: "register"

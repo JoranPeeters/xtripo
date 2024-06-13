@@ -18,6 +18,7 @@ class PlaceRepository extends ServiceEntityRepository
     {
         $place = new Place();
         $place->setName($placeData['name'] ?? '')
+              ->setDay($placeData['day'] ?? 0)
               ->setDescription($placeData['description'] ?? '')
               ->setWebsiteUrl($placeData['website_url'] ?? '')
               ->setTripadvisorUrl($placeData['tripadvisor_url'] ?? '')

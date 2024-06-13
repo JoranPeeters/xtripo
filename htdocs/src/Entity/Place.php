@@ -32,6 +32,9 @@ class Place
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $popularity = null;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $day = null;
+
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
     private ?string $price_level = null;
 
@@ -159,6 +162,18 @@ class Place
     public function setPopularity(?int $popularity): self
     {
         $this->popularity = $popularity;
+
+        return $this;
+    }
+
+    public function getDay(): ?int
+    {
+        return $this->day;
+    }
+
+    public function setDay(?int $day): self
+    {
+        $this->day = $day;
 
         return $this;
     }

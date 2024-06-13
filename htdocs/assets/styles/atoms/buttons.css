@@ -8,6 +8,10 @@
     @apply px-3 py-2 lg:px-4 lg:py-2 rounded-8 font-poppins font-normal text-base lg:text-lg duration-300;
 }
 
+.btn.active {
+    @apply bg-green text-primary font-semibold;
+}
+
 /* colors */
 .btn-green {
     @apply bg-green text-neutral hover:bg-dark-green;

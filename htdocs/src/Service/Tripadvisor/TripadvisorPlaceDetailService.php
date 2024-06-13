@@ -26,7 +26,7 @@ class TripadvisorPlaceDetailService
                 foreach ($limitedPlaceIds as $placeId) {
                     $details = $this->getPlaceDetail($category, $placeId);
                     if ($details) {
-                        $placeDetails[] = $this->placeFormatter->format($details);
+                        $placeDetails[] = $this->placeFormatter->format($details, $day);
                     }
                 }
             }
